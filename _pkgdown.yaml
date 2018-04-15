@@ -1,0 +1,13 @@
+navbar:
+  left:
+    - text: Home
+      href: index.html
+    - text: Reference
+      href: reference/index.html
+  right:
+    - icon: fa-github
+      href: https://github.com/phildonovan/donovanr
+    - text: spatialanalytics.co.nz
+      icon: fa-angle-double-up
+      href: https://spatialanalytics.co.nz
+
