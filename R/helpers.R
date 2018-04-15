@@ -1,0 +1,101 @@
+# A few functions to retrieve census data with
+#
+#   Build and Reload Package:  'Cmd + Shift + B'
+#   Check Package:             'Cmd + Shift + E'
+#   Test Package:              'Cmd + Shift + T'
+
+what_data_sets <- function(table_name = FALSE){
+  #' Get a table of census data available
+  #'
+  #' @description A function which shows what data sets are available and what they're called. For an
+  #' indepth query of a data set specify the table.
+  #' @param table_name The name of the table that for a description. Defaults to false for all tables/
+  #'
+  #' @returns A table describing the data sets or data set.
+
+  if (table_name == FALSE) {
+    table_description <-
+      tibble::tribble(
+        ~dataset, ~description,
+        "dwelling_area_units", "Dwelling data set at the area unit level",
+        "dwelling_local_boards", "Dwelling data set at the local board level",
+        "dwelling_meshblocks", "Dwelling data set at the meshblock level",
+        "dwelling_regions", "Dwelling data set at the regional level",
+        "dwelling_tas", "Dwelling data set at the territorial authority level",
+        "family_area_units", "Family data set at the area unit level",
+        "family_local_boards", "Family data set at the local board level",
+        "family_meshblocks", "Family data set at the meshblock level",
+        "family_regions", "Family data set at the regional level",
+        "family_tas", "Family data set at the territorial authority level",
+        "household_area_units", "Household data set at the area unit level",
+        "household_local_boards", "Household data set at the local board level",
+        "household_meshblocks", "Household data set at the meshblock level",
+        "household_regions", "Household data set at the regional level",
+        "household_tas", "Household data set at the territorial authority level",
+        "individual_part_1_area_units", "Individual (Part 1) data set at the area unit level",
+        "individual_part_1_local_boards", "Individual (Part 1) data set at the local board level",
+        "individual_part_1_meshblocks", "Individual (Part 1) data set at the meshblock level",
+        "individual_part_1_regions", "Individual (Part 1) data set at the regional level",
+        "individual_part_1_tas", "Individual (Part 1) data set at the territorial authority level",
+        "individual_part_2_area_units", "Individual (Part 2) data set at the area unit level",
+        "individual_part_2_local_boards", "Individual (Part 2) data set at the local board level",
+        "individual_part_2_meshblocks", "Individual (Part 2) data set at the meshblock level",
+        "individual_part_2_regions", "Individual (Part 2) data set at the regional level",
+        "individual_part_2_tas", "Individual (Part 2) data set at the territorial authority level",
+        "individual_part_3a_area_units", "Individual (Part 3A) data set at the area unit level",
+        "individual_part_3a_local_boards", "Individual (Part 3A) data set at the local board level",
+        "individual_part_3a_meshblocks", "Individual (Part 3A) data set at the meshblock level",
+        "individual_part_3a_regions", "Individual (Part 3A) data set at the regional level",
+        "individual_part_3a_tas", "Individual (Part 3A) data set at the territorial authority level",
+        "individual_part_3b_area_units", "Individual (Part 3B) data set at the area unit level",
+        "individual_part_3b_local_boards", "Individual (Part 3B) data set at the local board level",
+        "individual_part_3b_meshblocks", "Individual (Part 3B) data set at the meshblock level",
+        "individual_part_3b_regions", "Individual (Part 3B) data set at the regional level",
+        "individual_part_3b_tas", "Individual (Part 3B) data set at the territorial authority level"
+      )
+  } else {
+    message("This is not set up yet sorry! You'll have to have a look yourself.")
+  }
+
+  return(table_description)
+}
+
+read_nz_census <- function(data_set, include_gis = TRUE, long = FALSE, crs = 2198, sp = FALSE, replace_confidential_values = FALSE){
+  #' Read in NZ census data
+  #'
+  #' @description This function is a helper to read in the census data. Mainly meant for easy transformations
+  #' such as whether to include the GIS data, what its CRS system should be (defaults to 2198) and whether it
+  #' should come in the wide (default) or long format.
+  #'
+  #' @param data_set The data set to be passed. See what_data_sets.
+  #' @param include_gis If the data set should include the gis column (defaults to TRUE).
+  #' @param long If the data set should be in long or short form (defaults to wide).
+  #' @param crs The desired Coordinate Reference System of the data set (defaults to 2198). Only
+  #' @param sp Convert the simple features data frame to a sp object.
+  #' @param replace_confidential_values Replacement of confidential values ("..C") with another
+  #' value e.g. NA or 0 or anything for that matter!
+  #' important if the data includes a geometry column.
+  #'
+  #' @returns It returns either a tibble or a simple features dataframe.
+
+  # Replace confidential data
+  if (replace_confidential_values != FALSE) message("To be completed...")
+
+  # Drop geometry column
+  if (include_gis == FALSE) sf::st_geometry(data_set) <- NULL
+
+  # Perform CRS transformation
+  if (include_gis == TRUE & crs != 2198) data_set <- sf::st_transform(data_set, crs)
+  else if (include_gis == FALSE & crs != 2198) stop("You need to include a gis column in order to set the CRS!")
+
+  # Convert to long
+  if (long == TRUE & include_gis == FALSE) data_set <- gather(data_set, variable, value, -1, -2, -3)
+  else if (long == TRUE & include_gis == TRUE) stop("Sorry, you cannot retrieve long GIS data at present")
+
+  # Convert to sp
+  if (sp == TRUE) message("sp transform not available yet")
+
+  return(data_set)
+}
+
+
