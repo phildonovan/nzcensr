@@ -2,7 +2,7 @@ Package: nzcensr
 Type: Package
 Title: New Zealands 2013 census data
 Version: 0.1.0
-Authors@R: person("Phil", "R.", "Donovan", role = c("aut", "cre"), email = "philiprogerdonovan@gmail.com")
+Authors@R: person("Phil", "Donovan", role = c("aut", "cre"), email = "philiprogerdonovan@gmail.com")
 Maintainer: The package maintainer <philiprogerdonovan@gmail.com>
 Description: Provides New Zealands 2013 census data in a conveniant form with accessor functions
 License: TBC
@@ -12,6 +12,9 @@ RoxygenNote: 6.0.1
 Imports:
     dplyr,
     tibble,
+    sf,
+    tidyr,
+    stringr
 Suggests:
     sp
     

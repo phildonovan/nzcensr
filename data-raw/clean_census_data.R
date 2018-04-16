@@ -2,6 +2,8 @@
 
 library(tidyverse)
 library(sf)
+library(readr)
+library(stringr)
 library(purrr)
 library(devtools)
 
@@ -62,16 +64,16 @@ extract_data <- function(extraction_info, census_file, set_confidential_values =
   pattern <- extraction_info[["pattern"]]
 
   # Filter all census data
-  data <- filter(census_file, str_detect(Area_Code_and_Description, pattern))
+  data <- dplyr::filter(census_file, str_detect(Area_Code_and_Description, pattern))
 
   # convert "..C" to new number
-  data <- gather(data, census_column, count, -1, -2, -3) %>%
-    mutate(count = case_when(
-      str_detect(count, fixed("*")) == TRUE ~ NA_character_,
+  data <- tidyr::gather(data, census_column, count, -1, -2, -3) %>%
+    dplyr::mutate(count = dplyr::case_when(
+      stringr::str_detect(count, fixed("*")) == TRUE ~ NA_character_,
       # str_detect(count, "..C") == TRUE ~ "1",
       TRUE ~ count)
     ) %>%
-    spread(census_column, count)
+    tidyr::spread(census_column, count)
 
   # Attach geography
   # Insert join here.
@@ -110,7 +112,7 @@ x <- lapply(seq_along(cleaned_census_files), function(index) {
 
     new_name <- paste(layer_name_clean, layer_name, sep = "_")
 
-    new_dataset <- left_join(layer, gis[[layer_name]], by = setNames(join_col_gis, join_col)) %>%
+    new_dataset <- dplyr::left_join(layer, dplyr::select(gis[[layer_name]], 1), by = setNames(join_col_gis, join_col)) %>%
       st_sf
     st_crs(new_dataset) <- 2193
 
