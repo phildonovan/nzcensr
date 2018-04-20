@@ -103,7 +103,8 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
     } else {
       replacement_function <- function(col) {as.integer(gsub(".*", replace_confidential_values, col))}
     }
-    data_set <- dplyr::mutate_at(data_set, vars(replace_confidential_cols), funs(replacement_function))
+    data_set <- dplyr::mutate_at(data_set, dplyr::vars(replace_confidential_cols), dplyr::funs(replacement_function))
+    data_set <- sf::st_as_sf(data_set)
   }
 
   # Drop geometry column

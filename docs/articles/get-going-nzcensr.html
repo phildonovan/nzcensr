@@ -72,7 +72,7 @@
       <h1>Get going with nzcensr</h1>
                         <h4 class="author">Phil Donovan</h4>
             
-            <h4 class="date">2018-04-19</h4>
+            <h4 class="date">2018-04-20</h4>
       
       
       <div class="hidden name"><code>get-going-nzcensr.Rmd</code></div>
@@ -84,9 +84,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>The <code>nzcensr</code> package is mainly a data package to make it easy to perform normal and spatial analyses on the New Zealand census data. It contains the following data sets:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nzcensr)
-knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="../reference/nz_census_data.html">nz_census_data</a></span>())</code></pre></div>
+<p>The <code>nzcensr</code> package is mainly a data package to make it easy to import the New Zealand Census data as either normal or spatial dataframes without having to download the data for each project and perform different joins. The package contains the following data sets:</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">dataset</th>
@@ -243,214 +241,156 @@ knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <code><a href="../reference/read_nz_census_data.html">read_nz_census_data()</a></code>.</li>
 </ol>
 </div>
-<div id="an-analysis" class="section level2">
+<div id="fuel-types-in-nz" class="section level2">
 <h2 class="hasAnchor">
-<a href="#an-analysis" class="anchor"></a>An analysis</h2>
-<p>Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The <code>html_vignette</code> output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The <code>html_vignette</code> format:</p>
-<ul>
-<li>Never uses retina figures</li>
-<li>Has a smaller default figure size</li>
-<li>Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style</li>
-</ul>
-</div>
-<div id="vignette-info" class="section level2">
-<h2 class="hasAnchor">
-<a href="#vignette-info" class="anchor"></a>Vignette Info</h2>
-<p>Note the various macros within the <code>vignette</code> section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the <code>title</code> field and the <code>\VignetteIndexEntry</code> to match the title of your vignette.</p>
-</div>
-<div id="styles" class="section level2">
-<h2 class="hasAnchor">
-<a href="#styles" class="anchor"></a>Styles</h2>
-<p>The <code>html_vignette</code> template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:</p>
-<pre><code>output: 
-  rmarkdown::html_vignette:
-    css: mystyles.css</code></pre>
-</div>
-<div id="figures" class="section level2">
-<h2 class="hasAnchor">
-<a href="#figures" class="anchor"></a>Figures</h2>
-<p>The figure sizes have been customised so that you can easily put two images side-by-side.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)
-<span class="kw">plot</span>(<span class="dv">10</span><span class="op">:</span><span class="dv">1</span>)</code></pre></div>
-<p><img src="get-going-nzcensr_files/figure-html/unnamed-chunk-1-1.png" width="700"><img src="get-going-nzcensr_files/figure-html/unnamed-chunk-1-2.png" width="700"></p>
-<p>You can enable figure captions by <code>fig_caption: yes</code> in YAML:</p>
-<pre><code>output:
-  rmarkdown::html_vignette:
-    fig_caption: yes</code></pre>
-<p>Then you can use the chunk option <code>fig.cap = "Your figure caption."</code> in <strong>knitr</strong>.</p>
-</div>
-<div id="more-examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#more-examples" class="anchor"></a>More Examples</h2>
-<p>You can write math expressions, e.g. <span class="math inline">\(Y = X\beta + \epsilon\)</span>, footnotes<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, and tables, e.g. using <code><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">knitr::kable()</a></code>.</p>
+<a href="#fuel-types-in-nz" class="anchor"></a>Fuel types in NZ</h2>
+<p>Let’s explore the dwelling data set at the regional level.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nzcensr)
+
+<span class="co"># Read in data</span>
+dwelling_regions_long &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_nz_census_data.html">read_nz_census_data</a></span>(dwelling_regions, 
+                                          <span class="dt">long =</span> <span class="ot">TRUE</span>, 
+                                          <span class="dt">replace_confidential_values =</span> <span class="ot">NA_integer_</span>, 
+                                          <span class="dt">include_gis =</span> <span class="ot">FALSE</span>)
+knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw">head</span>(dwelling_regions_long))</code></pre></div>
 <table class="table">
 <thead><tr class="header">
-<th></th>
-<th align="right">mpg</th>
-<th align="right">cyl</th>
-<th align="right">disp</th>
-<th align="right">hp</th>
-<th align="right">drat</th>
-<th align="right">wt</th>
-<th align="right">qsec</th>
-<th align="right">vs</th>
-<th align="right">am</th>
-<th align="right">gear</th>
-<th align="right">carb</th>
+<th align="left">Area_Code_and_Description</th>
+<th align="left">Code</th>
+<th align="left">Description</th>
+<th align="left">variable</th>
+<th align="right">value</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>Mazda RX4</td>
-<td align="right">21.0</td>
-<td align="right">6</td>
-<td align="right">160.0</td>
-<td align="right">110</td>
-<td align="right">3.90</td>
-<td align="right">2.620</td>
-<td align="right">16.46</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">4</td>
+<td align="left">01 Northland Region</td>
+<td align="left">01</td>
+<td align="left">Northland Region</td>
+<td align="left">2001_Census_dwelling_record_type_for_occupied_dwellings_Occupied_Non-private_Dwelling</td>
+<td align="right">471</td>
 </tr>
 <tr class="even">
-<td>Mazda RX4 Wag</td>
-<td align="right">21.0</td>
-<td align="right">6</td>
-<td align="right">160.0</td>
-<td align="right">110</td>
-<td align="right">3.90</td>
-<td align="right">2.875</td>
-<td align="right">17.02</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">4</td>
+<td align="left">02 Auckland Region</td>
+<td align="left">02</td>
+<td align="left">Auckland Region</td>
+<td align="left">2001_Census_dwelling_record_type_for_occupied_dwellings_Occupied_Non-private_Dwelling</td>
+<td align="right">1548</td>
 </tr>
 <tr class="odd">
-<td>Datsun 710</td>
-<td align="right">22.8</td>
-<td align="right">4</td>
-<td align="right">108.0</td>
-<td align="right">93</td>
-<td align="right">3.85</td>
-<td align="right">2.320</td>
-<td align="right">18.61</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">1</td>
+<td align="left">03 Waikato Region</td>
+<td align="left">03</td>
+<td align="left">Waikato Region</td>
+<td align="left">2001_Census_dwelling_record_type_for_occupied_dwellings_Occupied_Non-private_Dwelling</td>
+<td align="right">843</td>
 </tr>
 <tr class="even">
-<td>Hornet 4 Drive</td>
-<td align="right">21.4</td>
-<td align="right">6</td>
-<td align="right">258.0</td>
-<td align="right">110</td>
-<td align="right">3.08</td>
-<td align="right">3.215</td>
-<td align="right">19.44</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">1</td>
+<td align="left">04 Bay of Plenty Region</td>
+<td align="left">04</td>
+<td align="left">Bay of Plenty Region</td>
+<td align="left">2001_Census_dwelling_record_type_for_occupied_dwellings_Occupied_Non-private_Dwelling</td>
+<td align="right">528</td>
 </tr>
 <tr class="odd">
-<td>Hornet Sportabout</td>
-<td align="right">18.7</td>
-<td align="right">8</td>
-<td align="right">360.0</td>
-<td align="right">175</td>
-<td align="right">3.15</td>
-<td align="right">3.440</td>
-<td align="right">17.02</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">2</td>
+<td align="left">05 Gisborne Region</td>
+<td align="left">05</td>
+<td align="left">Gisborne Region</td>
+<td align="left">2001_Census_dwelling_record_type_for_occupied_dwellings_Occupied_Non-private_Dwelling</td>
+<td align="right">114</td>
 </tr>
 <tr class="even">
-<td>Valiant</td>
-<td align="right">18.1</td>
-<td align="right">6</td>
-<td align="right">225.0</td>
-<td align="right">105</td>
-<td align="right">2.76</td>
-<td align="right">3.460</td>
-<td align="right">20.22</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td>Duster 360</td>
-<td align="right">14.3</td>
-<td align="right">8</td>
-<td align="right">360.0</td>
-<td align="right">245</td>
-<td align="right">3.21</td>
-<td align="right">3.570</td>
-<td align="right">15.84</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td>Merc 240D</td>
-<td align="right">24.4</td>
-<td align="right">4</td>
-<td align="right">146.7</td>
-<td align="right">62</td>
-<td align="right">3.69</td>
-<td align="right">3.190</td>
-<td align="right">20.00</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td>Merc 230</td>
-<td align="right">22.8</td>
-<td align="right">4</td>
-<td align="right">140.8</td>
-<td align="right">95</td>
-<td align="right">3.92</td>
-<td align="right">3.150</td>
-<td align="right">22.90</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td>Merc 280</td>
-<td align="right">19.2</td>
-<td align="right">6</td>
-<td align="right">167.6</td>
-<td align="right">123</td>
-<td align="right">3.92</td>
-<td align="right">3.440</td>
-<td align="right">18.30</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">4</td>
+<td align="left">06 Hawke’s Bay Region</td>
+<td align="left">06</td>
+<td align="left">Hawke’s Bay Region</td>
+<td align="left">2001_Census_dwelling_record_type_for_occupied_dwellings_Occupied_Non-private_Dwelling</td>
+<td align="right">342</td>
 </tr>
 </tbody>
 </table>
-<p>Also a quote using <code>&gt;</code>:</p>
-<blockquote>
-<p>“He who gives up [code] safety for [code] speed deserves neither.” (<a href="https://twitter.com/hadleywickham/status/504368538874703872">via</a>)</p>
-</blockquote>
-</div>
-<div class="footnotes">
-<hr>
-<ol>
-<li id="fn1"><p>A footnote here.<a href="#fnref1">↩</a></p></li>
-</ol>
+<p>Nice and easy! This call brings in the following dataset having set confidential values to NA, wihtout including the GIS geometry and in the ‘long’ firmat. This make for easy plotting in <code>ggplot2</code>. Let’s clean and extract th columns we have so that we can have a look at some of the fuel types used in four regions in New Zealand: Auckland, Wellington, Canterbury and Otago.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+
+<span class="co"># Clean data and variable names</span>
+fuel_types_regions &lt;-<span class="st"> </span>dwelling_regions_long <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(variable, <span class="st">"Census_fuel_types_used_to_heat_dwellings_.*_for_occupied_private_d"</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">variable =</span> <span class="kw">str_replace</span>(variable, <span class="st">"_Census_fuel_types_used_to_heat_dwellings_</span><span class="ch">\\</span><span class="st">(total_responses</span><span class="ch">\\</span><span class="st">)</span><span class="ch">\\</span><span class="st">(4</span><span class="ch">\\</span><span class="st">)_for_occupied_private_dwellings_"</span>, <span class="st">"splithere"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">           </span><span class="kw">str_replace_all</span>(<span class="st">"_"</span>, <span class="st">" "</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">separate</span>(variable, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">"year"</span>, <span class="st">"fuel_type"</span>), <span class="dt">sep =</span> <span class="st">"splithere"</span>, <span class="dt">remove =</span> <span class="ot">TRUE</span> )
+
+<span class="co"># Select desired regions and fuel types</span>
+fuel_types_regions_selected &lt;-<span class="st"> </span>fuel_types_regions <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(fuel_type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"Bottled Gas"</span>, <span class="st">"Coal"</span>, <span class="st">"Electricity"</span>, <span class="st">"Solar Power"</span>, <span class="st">"Wood"</span>),
+         Description <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"Auckland Region"</span>, <span class="st">"Canterbury Region"</span>, <span class="st">"Wellington Region"</span>, <span class="st">"Otago Region"</span>))
+
+knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw">head</span>(fuel_types_regions))</code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left">Area_Code_and_Description</th>
+<th align="left">Code</th>
+<th align="left">Description</th>
+<th align="left">year</th>
+<th align="left">fuel_type</th>
+<th align="right">value</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">01 Northland Region</td>
+<td align="left">01</td>
+<td align="left">Northland Region</td>
+<td align="left">2001</td>
+<td align="left">Bottled Gas</td>
+<td align="right">14658</td>
+</tr>
+<tr class="even">
+<td align="left">02 Auckland Region</td>
+<td align="left">02</td>
+<td align="left">Auckland Region</td>
+<td align="left">2001</td>
+<td align="left">Bottled Gas</td>
+<td align="right">92976</td>
+</tr>
+<tr class="odd">
+<td align="left">03 Waikato Region</td>
+<td align="left">03</td>
+<td align="left">Waikato Region</td>
+<td align="left">2001</td>
+<td align="left">Bottled Gas</td>
+<td align="right">40086</td>
+</tr>
+<tr class="even">
+<td align="left">04 Bay of Plenty Region</td>
+<td align="left">04</td>
+<td align="left">Bay of Plenty Region</td>
+<td align="left">2001</td>
+<td align="left">Bottled Gas</td>
+<td align="right">30132</td>
+</tr>
+<tr class="odd">
+<td align="left">05 Gisborne Region</td>
+<td align="left">05</td>
+<td align="left">Gisborne Region</td>
+<td align="left">2001</td>
+<td align="left">Bottled Gas</td>
+<td align="right">5067</td>
+</tr>
+<tr class="even">
+<td align="left">06 Hawke’s Bay Region</td>
+<td align="left">06</td>
+<td align="left">Hawke’s Bay Region</td>
+<td align="left">2001</td>
+<td align="left">Bottled Gas</td>
+<td align="right">22263</td>
+</tr>
+</tbody>
+</table>
+<p>Right, let’s plot it over time.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(fuel_types_regions_selected, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> value, <span class="dt">color =</span> Description, <span class="dt">group =</span> Description)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>fuel_type, <span class="dt">scales =</span> <span class="st">"free"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"Fuel types in selected regions in New Zealand from 2001 to 2006 to 2013"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">"Year"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">"Number of dwellings"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="get-going-nzcensr_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
 </div>
   </div>
 
@@ -460,11 +400,7 @@ knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#an-analysis">An analysis</a></li>
-      <li><a href="#vignette-info">Vignette Info</a></li>
-      <li><a href="#styles">Styles</a></li>
-      <li><a href="#figures">Figures</a></li>
-      <li><a href="#more-examples">More Examples</a></li>
+      <li><a href="#fuel-types-in-nz">Fuel types in NZ</a></li>
       </ul>
 </div>
       </div>
