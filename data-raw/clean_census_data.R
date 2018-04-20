@@ -116,6 +116,8 @@ x <- lapply(seq_along(cleaned_census_files), function(index) {
       st_sf
     st_crs(new_dataset) <- 2193
 
+    new_dataset <- dplyr::filter(new_dataset, !is.na(st_dimension(st_geometry(new_dataset))))
+
     assign(new_name, new_dataset)
     do.call("use_data", list(as.name(new_name), overwrite = TRUE))
   }, mc.cores = 3)

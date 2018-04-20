@@ -1,10 +1,12 @@
 # Several functions which are not exposed to make life easier internally
 
-pivot_census_table <- function(data_set, pivot = "long"){
+table_to_long <- function(data_set){
   #' Convert wide to long
   #'
   #' @description Merely converts a census dataframe from wide to long.
-  #' @importFrom tidyr gather spread
+  #' @importFrom tidyr gather
 
-  return(NA)
+  if ("geometry" %in% colnames(data_set)) sf::gather.sf(data_set, variable, value, -1, -2, -3, -geometry)
+  else tidyr::gather(data_set, variable, value, -1, -2, -3)
+
 }
