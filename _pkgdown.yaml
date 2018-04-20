@@ -2,7 +2,8 @@ navbar:
   left:
     - text: Home
       href: index.html
-
+    - text: Articles
+      href: articles/index.html
     - text: Reference
       href: reference/index.html
   right:
