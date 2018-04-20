@@ -16,5 +16,7 @@ Imports:
     tidyr,
     stringr
 Suggests:
-    sp
-    
+    sp,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -4,7 +4,7 @@
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
 
-census_data <- function(table_name = data.frame()){
+nz_census_data <- function(table_name = data.frame()){
   #' Get a table of census data available
   #'
   #' @description A function which shows what data sets are available and what they're called. For an
@@ -67,7 +67,7 @@ census_data <- function(table_name = data.frame()){
   return(table_description)
 }
 
-read_census_data <- function(data_set, include_gis = TRUE, long = FALSE, crs = 2198, sp = FALSE, replace_confidential_values = NULL){
+read_nz_census_data <- function(data_set, replace_confidential_values = NULL, include_gis = TRUE, crs = 2198, long = FALSE){
   #' Read in NZ census data
   #'
   #' @description This function is a helper to read in the census data. Mainly meant for easy transformations
@@ -76,14 +76,14 @@ read_census_data <- function(data_set, include_gis = TRUE, long = FALSE, crs = 2
   #'
   #' @param data_set The data set to be passed. See what_data_sets.
   #' @param include_gis If the data set should include the gis column (defaults to TRUE).
-  #' @param long If the data set should be in long or short form (defaults to wide).
   #' @param crs The desired Coordinate Reference System of the data set (defaults to 2198). Only
-  #' @param sp Convert the simple features data frame to a sp object.
+  #' important if the data includes a geometry column.
   #' @param replace_confidential_values Replacement of confidential values ("..C") with another
   #' value e.g. NA or 0 or anything for that matter!
-  #' important if the data includes a geometry column.
+  #' @param long Whether the data should be returned in the long format or not.
   #'
   #' @return It returns either a tibble or a simple features dataframe.
+  #'
   #' @export
   #' @importFrom dplyr mutate case_when
   #' @importFrom stringr str_detect
@@ -92,14 +92,19 @@ read_census_data <- function(data_set, include_gis = TRUE, long = FALSE, crs = 2
 
   # Replace confidential data
   if (!is.null(replace_confidential_values)) {
-    if (!is.numeric(replace_confidential_values)) stop("Replacement value must be a number")
+    if (!is.numeric(replace_confidential_values)) stop("Replacement value must be a number or NA_integer_")
 
-    # Replace value
-    data_set <- dplyr::mutate(data_set,
-                              count = dplyr::case_when(
-                                str_detect(count, "..C") == TRUE ~ as.character(replace_confidential_values),
-                                TRUE ~ count)
-                              )
+    do_not_mutate <- c("Area_Code_and_Description", "Code", "Description", "geometry")
+    replace_confidential_cols <- colnames(data_set)[!(colnames(data_set) %in% do_not_mutate)]
+    replace_confidential_values <- as.character(replace_confidential_values)
+
+    if(is.na(replace_confidential_values)) {
+      replacement_function <- function(col) {suppressWarnings(as.integer(col))}
+    } else {
+      replacement_function <- function(col) {as.integer(gsub(".*", replace_confidential_values, col))}
+    }
+    data_set <- dplyr::mutate_at(data_set, dplyr::vars(replace_confidential_cols), dplyr::funs(replacement_function))
+    data_set <- sf::st_as_sf(data_set)
   }
 
   # Drop geometry column
@@ -107,14 +112,9 @@ read_census_data <- function(data_set, include_gis = TRUE, long = FALSE, crs = 2
 
   # Perform CRS transformation
   if (include_gis == TRUE & crs != 2198) data_set <- sf::st_transform(data_set, crs)
-  else if (include_gis == FALSE & crs != 2198) stop("You need to include a gis column in order to set the CRS!")
 
   # Convert to long
-  if (long == TRUE & include_gis == FALSE) data_set <- tidyr::gather(data_set, variable, value, -1, -2, -3)
-  else if (long == TRUE & include_gis == TRUE) stop("Sorry, you cannot retrieve long GIS data at present")
-
-  # Convert to sp
-  if (sp == TRUE) message("sp transform not available yet")
+  if (long == TRUE) data_set <- table_to_long(data_set)
 
   return(data_set)
 }
