@@ -12,5 +12,8 @@ before_install:
     - sudo apt-get install -y libgeos-dev
     - sudo apt-get install -y libproj-dev
 
+r_packages:
+    - tidyverse
+
 after_success:
     - Rscript -e 'library(covr); codecov()'
