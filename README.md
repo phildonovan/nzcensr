@@ -5,7 +5,7 @@
 
 ## Introduction
 
-A library largely composed of tables representing the [New Zealand Census](https://www.stats.govt.nz/) and a few helper functions to access it.
+A library largely composed of tables representing the [New Zealand Census](https://www.stats.govt.nz/) and a helper function to access them.
 The data can be either a normal dataframe (tibble) or a simple features data table (GIS).
 
 NOTE: This is my first package so please let me know what I am doing wrong. 
