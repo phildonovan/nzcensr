@@ -1,7 +1,9 @@
-## Introduction
-
+# nzcensr
 [![Travis-CI Build Status](https://travis-ci.org/phildonovan/nzcensr.svg?branch=master)](https://travis-ci.org/phildonovan/nzcensr)
 
+<a href="http://www.spatialanalytics.co.nz/packages/nzcensr/"><img align="right" src="inst/figures/nzcensr_sticker.png" height="250" width="250" /></a>
+
+## Introduction
 
 A library largely composed of tables representing the [New Zealand Census](https://www.stats.govt.nz/) and a few helper functions to access it.
 The data can be either a normal dataframe (tibble) or a simple features data table (GIS).
