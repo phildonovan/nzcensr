@@ -1,7 +1,7 @@
 # nzcensr
 [![Travis-CI Build Status](https://travis-ci.org/phildonovan/nzcensr.svg?branch=master)](https://travis-ci.org/phildonovan/nzcensr)
 
-<a href="http://www.spatialanalytics.co.nz/packages/nzcensr/"><img align="right" src="inst/figures/nzcensr_sticker.png" height="200" width="200" /></a>
+<a href="http://www.spatialanalytics.co.nz/packages/nzcensr/"><img align="right" src="https://user-images.githubusercontent.com/1796295/39080457-148a54be-4583-11e8-936b-99cfb36f936e.png" height="200" width="200" /></a>
 
 ## Introduction
 
