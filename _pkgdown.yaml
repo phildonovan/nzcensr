@@ -3,7 +3,9 @@ navbar:
     - text: Home
       href: index.html
     - text: Articles
-      href: articles/index.html
+      menu:
+      - text: Get going with nzcensr
+        href: articles/get-going-nzcensr.html
     - text: Reference
       href: reference/index.html
   right:
