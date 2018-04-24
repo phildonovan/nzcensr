@@ -6,15 +6,14 @@
 \usage{
 clean_census_columns(long_df)
 }
+\arguments{
+\item{long_df}{The data frame to be cleaned. Must be a long dataframe returned by read_nz_census_data()}
+}
 \description{
 Cleans the variable names and splits them into columns in a long table.
 }
 \examples{
 nz_dwelling_regions_long <- read_nz_census_data(dwelling_regions, include_gis = FALSE, long = TRUE, replace_confidential_values = NA_integer_)
 cleaned_data <- clean_census_columns(nz_dwelling_regions_long)
-ggplot(
-  cleaned_data \%>\% filter(topic == "dwelling record type for occupied dwellings", variable == "Occupied Non-private Dwelling"),
-  aes(x = year, y = value, colour = Description, group = Description)) +
-  geom_line() +
-  theme_bw()
+head(cleaned_data)
 }
