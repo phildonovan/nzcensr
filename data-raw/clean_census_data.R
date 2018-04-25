@@ -85,14 +85,34 @@ extract_data <- function(extraction_info, census_file, set_confidential_values =
 # Perform extraction
 cleaned_census_files <- map(census_files, clean_census_csv)
 
-# Load GIS.
+# Load GIS. And pure GIS write files to data file
+path <- "data-raw/gis"
+
+meshblocks = st_read(file.path(path, "MB2013_GV_Clipped.tab"))
+use_data(meshblocks)
+
+area_units = st_read(file.path(path, "AU2013_GV_Clipped.tab"))
+use_data(area_units)
+
+local_boards = st_read(file.path(path, "CB2013_GV_Clipped.tab"))
+use_data(local_boards)
+
+wards = st_read(file.path(path, "WARD2013_GV_Clipped.tab"))
+use_data(wards)
+
+tas = st_read(file.path(path, "TA2013_GV_Clipped.tab"))
+use_data(tas)
+
+regions = st_read(file.path(path, "REGC2013_GV_Clipped.tab"))
+use_data(regions)
+
 gis <- list(
-  meshblocks = st_read("data-raw/2013 Digital Boundaries Generalised Clipped/MB2013_GV_Clipped.tab"),
-  area_units = st_read("data-raw/2013 Digital Boundaries Generalised Clipped/AU2013_GV_Clipped.tab"),
-  local_boards = st_read("data-raw/2013 Digital Boundaries Generalised Clipped/CB2013_GV_Clipped.tab"),
-  wards = st_read("data-raw/2013 Digital Boundaries Generalised Clipped/WARD2013_GV_Clipped.tab"),
-  tas = st_read("data-raw/2013 Digital Boundaries Generalised Clipped/TA2013_GV_Clipped.tab"),
-  regions = st_read("data-raw/2013 Digital Boundaries Generalised Clipped/REGC2013_GV_Clipped.tab")
+  meshblocks = meshblocks,
+  area_units = area_units,
+  local_boards = local_boards,
+  wards = wards,
+  tas = tas,
+  regions = regions
 )
 
 x <- lapply(seq_along(cleaned_census_files), function(index) {
