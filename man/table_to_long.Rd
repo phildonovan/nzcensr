@@ -4,7 +4,10 @@
 \alias{table_to_long}
 \title{Convert wide to long}
 \usage{
-table_to_long(data_set)
+table_to_long(data)
+}
+\arguments{
+\item{data}{The data set to be transformed.}
 }
 \description{
 Merely converts a census dataframe from wide to long.

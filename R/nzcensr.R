@@ -50,6 +50,15 @@ NULL
 #' @keywords data
 "dwelling_tas"
 
+#' Dwelling wards data
+#'
+#' Dwelling data set at the ward level
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(dwelling_wards)
+#' @keywords data
+"dwelling_wards"
+
 #' Family area units data
 #'
 #' Family data set at the area unit level
@@ -94,6 +103,15 @@ NULL
 #' @usage data(family_tas)
 #' @keywords data
 "family_tas"
+
+#' Family wards data
+#'
+#' Family data set at the wards level
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(family_wards)
+#' @keywords data
+"family_wards"
 
 #' Household area units data
 #'
@@ -140,6 +158,15 @@ NULL
 #' @keywords data
 "household_tas"
 
+#' Household wards data
+#'
+#' Household data set at the wards level
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(household_wards)
+#' @keywords data
+"household_wards"
+
 #' Individual part 1 area units data
 #'
 #' Individual part 1 data set at the area unit level
@@ -184,6 +211,15 @@ NULL
 #' @usage data(individual_part_1_tas)
 #' @keywords data
 "individual_part_1_tas"
+
+#' Individual part 1 ward data
+#'
+#' Individual part 1 data set at the ward level
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(individual_part_1_wards)
+#' @keywords data
+"individual_part_1_wards"
 
 #' Individual part 2 area units data
 #'
@@ -230,6 +266,15 @@ NULL
 #' @keywords data
 "individual_part_2_tas"
 
+#' Individual part 2 ward data
+#'
+#' Individual part 2 data set at the ward level
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(individual_part_2_wards)
+#' @keywords data
+"individual_part_2_wards"
+
 #' Individual part 3a area units data
 #'
 #' Individual part 3a data set at the area unit level
@@ -275,6 +320,15 @@ NULL
 #' @keywords data
 "individual_part_3a_tas"
 
+#' Individual part 3a wards data
+#'
+#' Individual part 3a data set at the wards level
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(individual_part_3a_wards)
+#' @keywords data
+"individual_part_3a_wards"
+
 #' Individual part 3b area units data
 #'
 #' Individual part 3b data set at the area unit level
@@ -319,3 +373,12 @@ NULL
 #' @usage data(individual_part_3b_tas)
 #' @keywords data
 "individual_part_3b_tas"
+
+#' Individual part 3b wards data
+#'
+#' Individual part 3b data set at the wards level
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(individual_part_3b_wards)
+#' @keywords data
+"individual_part_3b_wards"
