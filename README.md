@@ -1,5 +1,6 @@
 # nzcensr
 [![Travis-CI Build Status](https://travis-ci.org/phildonovan/nzcensr.svg?branch=master)](https://travis-ci.org/phildonovan/nzcensr)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/phildonovan/nzcensr?branch=master&svg=true)](https://ci.appveyor.com/project/phildonovan/nzcensr)
 
 <a href="http://www.spatialanalytics.co.nz/packages/nzcensr/"><img align="right" src="https://user-images.githubusercontent.com/1796295/39080457-148a54be-4583-11e8-936b-99cfb36f936e.png" height="200" width="200" /></a>
 
