@@ -1,6 +1,6 @@
 context("test-read-nz-census-data.R")
 library(sf)
-library(tidyverse)
+library(tidyr)
 library(nzcensr)
 
 

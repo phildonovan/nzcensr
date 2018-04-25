@@ -5,6 +5,7 @@
 packrat/lib*/
 
 *DS_Store
-data-raw/2013 Digital Boundaries Generalised Clipped
-data-raw/2013_mb_dataset_Total_New_Zealand_CSV
+data-raw/csvs
+data-raw/gis
 inst/doc
+nzcensr.Rproj

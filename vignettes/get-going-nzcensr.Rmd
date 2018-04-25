@@ -53,31 +53,6 @@ This make for easy plotting in `ggplot2`.
 Let's clean and extract th columns we have so that we can have a look at some of the fuel types used in four regions in New Zealand: Auckland, Wellington, Canterbury and Otago.
 
 ```{r, message=FALSE, warning=FALSE}
-library(tidyverse)
-
-# Clean data and variable names
-fuel_types_regions <- dwelling_regions_long %>% 
-  filter(str_detect(variable, "Census_fuel_types_used_to_heat_dwellings_.*_for_occupied_private_d")) %>% 
-  mutate(variable = str_replace(variable, "_Census_fuel_types_used_to_heat_dwellings_\\(total_responses\\)\\(4\\)_for_occupied_private_dwellings_", "splithere") %>% 
-           str_replace_all("_", " ")) %>% 
-  separate(variable, into = c("year", "fuel_type"), sep = "splithere", remove = TRUE )
-
-# Select desired regions and fuel types
-fuel_types_regions_selected <- fuel_types_regions %>% 
-  filter(fuel_type %in% c("Bottled Gas", "Coal", "Electricity", "Solar Power", "Wood"),
-         Description %in% c("Auckland Region", "Canterbury Region", "Wellington Region", "Otago Region"))
-
-knitr::kable(head(fuel_types_regions))
+dwelling_regions_long_clean <- clean_census_columns(dwelling_regions_long)
 ```
 
-Right, let's plot it over time.
-
-```{r, fig.height=6, fig.width=8}
-ggplot(fuel_types_regions_selected, aes(x = year, y = value, color = Description, group = Description)) + 
-  geom_line() + 
-  facet_wrap(~fuel_type, scales = "free") +
-  ggtitle("Fuel types in selected regions in New Zealand from 2001 to 2006 to 2013") +
-  xlab("Year") +
-  ylab("Number of dwellings") +
-  theme_bw()
-```

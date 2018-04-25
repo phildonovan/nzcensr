@@ -6,6 +6,9 @@
 \usage{
 split_topics_variables(topic_variable)
 }
+\arguments{
+\item{topic_variable}{The column with the topic and variable stuck together e.g. ("variable" column from long output)}
+}
 \description{
 Splits the variavble column of the long data into years, topics and variables.
 Only intended for use inside of clean_census_variables()
