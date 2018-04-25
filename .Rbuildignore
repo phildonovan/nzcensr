@@ -4,3 +4,4 @@
 ^\.Rprofile$
 ^\.travis\.yml$
 ^LICENSE\.md$
+^appveyor\.yml$
