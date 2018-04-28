@@ -16,7 +16,7 @@ cache:
 # Adapt as necessary starting from here
 platform: x64
 
-R_CHECK_ARGS: --install-args=--no-data
+R_CHECK_ARGS: --install-args="--no-data"
 
 environment:
   USE_RTOOLS: true
