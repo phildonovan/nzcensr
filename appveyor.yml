@@ -20,7 +20,6 @@ environment:
   USE_RTOOLS: true
   NOT_CRAN: true
   R_ARCH: x64
-  R_CHECK_ARGS: --install-args=--no-data
 
 build_script:
   - travis-tool.sh install_deps
