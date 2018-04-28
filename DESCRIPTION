@@ -4,7 +4,7 @@ Title: New Zealands 2013 census data
 Version: 0.1.0
 Authors@R: person("Phil", "Donovan", role = c("aut", "cre"), email = "philiprogerdonovan@gmail.com")
 Maintainer: The package maintainer <philiprogerdonovan@gmail.com>
-Description: Provides New Zealands 2013 census data in a conveniant form with accessor functions
+Description: Provides New Zealands 2013 census data in a conveniant form with accessor functions to both spatial and non-spatial forms.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -16,9 +16,10 @@ Imports:
     sf,
     tidyr,
     stringr
-Suggests:
+Suggests: 
     sp,
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    covr
 VignetteBuilder: knitr
