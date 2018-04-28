@@ -43,18 +43,18 @@ test_that("read-nz-census-data import long data correctly with no gis", {
   expect_equal(dwelling_area_units_test, dwelling_area_units_read)
 })
 
-test_that("read-nz-census-data import long data correctly WITH gis", {
-
-  # Retrieve test data and perform operation manually.
-  dwelling_regions_test <- dwelling_regions
-  dwelling_regions_test <- sf::gather.sf(dwelling_regions_test, variable, value, -1, -2, -3, -geometry)
-
-  # Get the outputs of the function call
-  dwelling_regions_read <- read_nz_census_data(dwelling_regions, include_gis = TRUE, long = TRUE)
-
-  # Check that they're equivalent
-  expect_equal(data.frame(dwelling_regions_test), data.frame(dwelling_regions_read))
-})
+# test_that("read-nz-census-data import long data correctly WITH gis", {
+#
+#   # Retrieve test data and perform operation manually.
+#   dwelling_regions_test <- dwelling_regions
+#   dwelling_regions_test <- sf::gather.sf(dwelling_regions_test, variable, value, -1, -2, -3, -geometry)
+#
+#   # Get the outputs of the function call
+#   dwelling_regions_read <- read_nz_census_data(dwelling_regions, include_gis = TRUE, long = TRUE)
+#
+#   # Check that they're equivalent
+#   expect_equal(data.frame(dwelling_regions_test), data.frame(dwelling_regions_read))
+# })
 
 test_that("read-nz-census-data converts the CRS correctly", {
 
