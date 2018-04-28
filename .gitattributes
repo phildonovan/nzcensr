@@ -1,2 +1,4 @@
-data-raw/gis filter=lfs diff=lfs merge=lfs -text
-data-raw/csvs filter=lfs diff=lfs merge=lfs -text
+* text=auto
+data/* binary
+src/* text=lf
+R/* text=lf

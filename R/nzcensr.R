@@ -382,3 +382,59 @@ NULL
 #' @usage data(individual_part_3b_wards)
 #' @keywords data
 "individual_part_3b_wards"
+
+## GIS
+
+#' Meshblocks
+#'
+#' The meshblocks spatial data set without any other census variables
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(meshblocks)
+#' @keywords data
+"meshblocks"
+
+#' Area units
+#'
+#' The area units spatial data set without any other census variables
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(area_units)
+#' @keywords data
+"area_units"
+
+#' Local boards
+#'
+#' The local boards spatial data set without any other census variables
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(local_boards)
+#' @keywords data
+"local_boards"
+
+#' Regions
+#'
+#' The regions spatial data set without any other census variables
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(regions)
+#' @keywords data
+"regions"
+
+#' Territorial Authorities
+#'
+#' The territorial authorities spatial data set without any other census variables
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(tas)
+#' @keywords data
+"tas"
+
+#' Wards
+#'
+#' The wards spatial data set without any other census variables
+#'
+#' @author Phil Donovan \email{philiprogerdonovan@@gmail.com}
+#' @usage data(wards)
+#' @keywords data
+"wards"
