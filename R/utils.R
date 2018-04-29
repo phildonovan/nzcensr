@@ -6,7 +6,9 @@ table_to_long <- function(data){
   #' @description Merely converts a census dataframe from wide to long.
   #'
   #' @param data The data set to be transformed.
+  #' @importFrom dplyr everything
   #' @importFrom tidyr gather
+  #' @importFrom sf gather.sf
 
   if ("geometry" %in% colnames(data)) sf::gather.sf(data, variable, value, -1, -2, -3, -geometry)
   else tidyr::gather(data, variable, value, -1, -2, -3)
@@ -48,7 +50,7 @@ clean_census_columns <- function(data){
     dplyr::select(year, 1:3)
 
   cleaned_data <- cbind(data %>% dplyr::select(-variable), census_topics_variables) %>%
-    dplyr::select(1:3, year, topic, variable, everything())
+    dplyr::select(1:3, year, topic, variable, dplyr::everything())
 
   return(cleaned_data)
 

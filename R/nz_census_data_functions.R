@@ -67,7 +67,8 @@ nz_census_data <- function(table_name = data.frame()){
   return(table_description)
 }
 
-read_nz_census_data <- function(data_set, replace_confidential_values = NULL, include_gis = TRUE, crs = 2198, long = FALSE){
+read_nz_census_data <- function(data_set, replace_confidential_values = NULL, include_gis = TRUE,
+                                crs = 2198, long = FALSE, clean = FALSE){
   #' Read in NZ census data
   #'
   #' @description This function is a helper to read in the census data. Mainly meant for easy transformations
@@ -115,6 +116,10 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
 
   # Convert to long
   if (long == TRUE) data_set <- table_to_long(data_set)
+
+  # Clean columns
+  if (clean == TRUE & long == TRUE) data_set <- clean_census_columns(data_set)
+  else if (clean == TRUE & long == FALSE) stop("To clean the data, it must be long. Specifiy long = TRUE in read_nz_census_data()")
 
   return(data_set)
 }
