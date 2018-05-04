@@ -82,6 +82,7 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
   #' @param replace_confidential_values Replacement of confidential values ("..C") with another
   #' value e.g. NA or 0 or anything for that matter!
   #' @param long Whether the data should be returned in the long format or not.
+  #' @param clean True/False on whether to separate the original census column headers into year, 'topics' and 'variables'.
   #'
   #' @return It returns either a tibble or a simple features dataframe.
   #'
