@@ -15,8 +15,9 @@ Imports:
     tibble,
     sf,
     tidyr,
-    stringr
-Suggests: 
+    stringr,
+    magrittr
+Suggests:
     sp,
     knitr,
     rmarkdown,

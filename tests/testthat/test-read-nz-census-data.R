@@ -75,5 +75,5 @@ test_that("read-nz-census-data cleans correctly", {
   dwelling_regions_long <- read_nz_census_data(dwelling_regions, include_gis = TRUE, long = TRUE, clean = TRUE)
 
   # Check that they're equivalent
-  expect_equal(ncol(dwelling_regions_long), 7)
+  expect_equal(ncol(dwelling_regions_long), 8)
 })

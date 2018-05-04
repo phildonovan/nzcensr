@@ -30,7 +30,16 @@ clean_census_columns <- function(data){
   #' head(cleaned_data)
   #' @export
   #' @importFrom stringr str_replace str_replace_all
-  #' @importFrom dplyr pull mutate select
+  #' @importFrom dplyr pull mutate select everything
+  #' @importFrom magrittr "%>%"
+  #' @importFrom sf st_geometry
+
+  # Extract geography
+  if ("sf" %in% class(data) | "sfc" %in% class(data)) {
+    is_geog <- TRUE
+    geog <- sf::st_geometry(data)
+    sf::st_geometry(data) <- NULL
+  } else is_geog <- FALSE
 
   # Extract variable columns
   variables <- dplyr::pull(data, variable)
@@ -52,9 +61,11 @@ clean_census_columns <- function(data){
   cleaned_data <- cbind(data %>% dplyr::select(-variable), census_topics_variables) %>%
     dplyr::select(1:3, year, topic, variable, dplyr::everything())
 
+  if (is_geog) {
+    sf::st_geometry(cleaned_data) <- geog
+  }
+
   return(cleaned_data)
-
-
 }
 
 split_topics_variables <- function(topic_variable){
