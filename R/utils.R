@@ -10,7 +10,7 @@ table_to_long <- function(data){
   #' @importFrom tidyr gather
   #' @importFrom sf gather.sf
 
-  if ("geometry" %in% colnames(data)) sf::gather.sf(data, variable, value, -1, -2, -3, -geometry)
+  if ("geometry" %in% colnames(data))  gather.sf(data, variable, value, -1, -2, -3, -geometry)
   else tidyr::gather(data, variable, value, -1, -2, -3)
 
 }
