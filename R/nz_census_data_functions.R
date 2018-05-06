@@ -90,7 +90,7 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
   #' @importFrom dplyr mutate case_when
   #' @importFrom stringr str_detect
   #' @importFrom tidyr gather spread
-  #' @importFrom sf st_geometry st_transform
+  #' @importFrom sf st_geometry st_transform st_as_sf gather.sf
 
   # Replace confidential data
   if (!is.null(replace_confidential_values)) {

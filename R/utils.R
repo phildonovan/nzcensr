@@ -6,11 +6,13 @@ table_to_long <- function(data){
   #' @description Merely converts a census dataframe from wide to long.
   #'
   #' @param data The data set to be transformed.
+  #' @export
   #' @importFrom dplyr everything
   #' @importFrom tidyr gather
+  #' @importFrom sf gather.sf
 
-  if ("geometry" %in% colnames(data)) gather.sf(data, variable, value, -1, -2, -3, -geometry)
-  else tidyr::gather(data, variable, value, -1, -2, -3)
+  if ("geometry" %in% colnames(data)) gather(data, variable, value, -1, -2, -3, -geometry)
+  else gather(data, variable, value, -1, -2, -3)
 
 }
 
@@ -74,6 +76,7 @@ split_topics_variables <- function(topic_variable){
   #' Only intended for use inside of clean_census_variables()
   #'
   #' @param topic_variable The column with the topic and variable stuck together e.g. ("variable" column from long output)
+  #' @export
   #' @importFrom stringr str_detect
 
   topic <- topic_variable[!stringr::str_detect(topic_variable, "[A-Z]")] %>% paste(collapse = " ")
