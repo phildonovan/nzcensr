@@ -7,9 +7,7 @@ table_to_long <- function(data){
   #'
   #' @param data The data set to be transformed.
   #' @export
-  #' @importFrom dplyr everything
-  #' @importFrom tidyr gather
-  #' @importFrom sf gather.sf
+
 
   if ("geometry" %in% colnames(data)) gather(data, variable, value, -1, -2, -3, -geometry)
   else gather(data, variable, value, -1, -2, -3)
@@ -30,10 +28,7 @@ clean_census_columns <- function(data){
   #' cleaned_data <- clean_census_columns(nz_dwelling_regions_long)
   #' head(cleaned_data)
   #' @export
-  #' @importFrom stringr str_replace str_replace_all
-  #' @importFrom dplyr pull mutate select everything
   #' @importFrom magrittr "%>%"
-  #' @importFrom sf st_geometry
 
   # Extract geography
   if ("sf" %in% class(data) | "sfc" %in% class(data)) {
@@ -77,7 +72,6 @@ split_topics_variables <- function(topic_variable){
   #'
   #' @param topic_variable The column with the topic and variable stuck together e.g. ("variable" column from long output)
   #' @export
-  #' @importFrom stringr str_detect
 
   topic <- topic_variable[!stringr::str_detect(topic_variable, "[A-Z]")] %>% paste(collapse = " ")
   variable <- topic_variable[stringr::str_detect(topic_variable, "[A-Z]")] %>% paste(collapse = " ")

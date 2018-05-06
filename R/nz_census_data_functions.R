@@ -13,7 +13,6 @@ nz_census_data <- function(table_name = data.frame()){
   #'
   #' @return A table describing the data sets or data set.
   #' @export
-  #' @importFrom tibble tribble
 
   table_description <-
     tibble::tribble(
@@ -87,10 +86,6 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
   #' @return It returns either a tibble or a simple features dataframe.
   #'
   #' @export
-  #' @importFrom dplyr mutate case_when
-  #' @importFrom stringr str_detect
-  #' @importFrom tidyr gather spread
-  #' @importFrom sf st_geometry st_transform st_as_sf gather.sf
 
   # Replace confidential data
   if (!is.null(replace_confidential_values)) {
