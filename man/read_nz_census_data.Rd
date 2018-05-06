@@ -5,7 +5,7 @@
 \title{Read in NZ census data}
 \usage{
 read_nz_census_data(data_set, replace_confidential_values = NULL,
-  include_gis = TRUE, crs = 2198, long = FALSE)
+  include_gis = TRUE, crs = 2198, long = FALSE, clean = FALSE)
 }
 \arguments{
 \item{data_set}{The data set to be passed. See what_data_sets.}
@@ -19,6 +19,8 @@ value e.g. NA or 0 or anything for that matter!}
 important if the data includes a geometry column.}
 
 \item{long}{Whether the data should be returned in the long format or not.}
+
+\item{clean}{True/False on whether to separate the original census column headers into year, 'topics' and 'variables'.}
 }
 \value{
 It returns either a tibble or a simple features dataframe.

@@ -6,10 +6,11 @@ table_to_long <- function(data){
   #' @description Merely converts a census dataframe from wide to long.
   #'
   #' @param data The data set to be transformed.
-  #' @importFrom tidyr gather
+  #' @export
 
-  if ("geometry" %in% colnames(data)) sf::gather.sf(data, variable, value, -1, -2, -3, -geometry)
-  else tidyr::gather(data, variable, value, -1, -2, -3)
+
+  if ("geometry" %in% colnames(data)) gather(data, variable, value, -1, -2, -3, -geometry)
+  else gather(data, variable, value, -1, -2, -3)
 
 }
 
@@ -27,8 +28,14 @@ clean_census_columns <- function(data){
   #' cleaned_data <- clean_census_columns(nz_dwelling_regions_long)
   #' head(cleaned_data)
   #' @export
-  #' @importFrom stringr str_replace str_replace_all
-  #' @importFrom dplyr pull mutate select
+  #' @importFrom magrittr "%>%"
+
+  # Extract geography
+  if ("sf" %in% class(data) | "sfc" %in% class(data)) {
+    is_geog <- TRUE
+    geog <- sf::st_geometry(data)
+    sf::st_geometry(data) <- NULL
+  } else is_geog <- FALSE
 
   # Extract variable columns
   variables <- dplyr::pull(data, variable)
@@ -48,11 +55,13 @@ clean_census_columns <- function(data){
     dplyr::select(year, 1:3)
 
   cleaned_data <- cbind(data %>% dplyr::select(-variable), census_topics_variables) %>%
-    dplyr::select(1:3, year, topic, variable, everything())
+    dplyr::select(1:3, year, topic, variable, dplyr::everything())
+
+  if (is_geog) {
+    sf::st_geometry(cleaned_data) <- geog
+  }
 
   return(cleaned_data)
-
-
 }
 
 split_topics_variables <- function(topic_variable){
@@ -62,7 +71,7 @@ split_topics_variables <- function(topic_variable){
   #' Only intended for use inside of clean_census_variables()
   #'
   #' @param topic_variable The column with the topic and variable stuck together e.g. ("variable" column from long output)
-  #' @importFrom stringr str_detect
+  #' @export
 
   topic <- topic_variable[!stringr::str_detect(topic_variable, "[A-Z]")] %>% paste(collapse = " ")
   variable <- topic_variable[stringr::str_detect(topic_variable, "[A-Z]")] %>% paste(collapse = " ")

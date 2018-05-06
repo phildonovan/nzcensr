@@ -13,7 +13,6 @@ nz_census_data <- function(table_name = data.frame()){
   #'
   #' @return A table describing the data sets or data set.
   #' @export
-  #' @importFrom tibble tribble
 
   table_description <-
     tibble::tribble(
@@ -67,7 +66,8 @@ nz_census_data <- function(table_name = data.frame()){
   return(table_description)
 }
 
-read_nz_census_data <- function(data_set, replace_confidential_values = NULL, include_gis = TRUE, crs = 2198, long = FALSE){
+read_nz_census_data <- function(data_set, replace_confidential_values = NULL, include_gis = TRUE,
+                                crs = 2198, long = FALSE, clean = FALSE){
   #' Read in NZ census data
   #'
   #' @description This function is a helper to read in the census data. Mainly meant for easy transformations
@@ -81,14 +81,11 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
   #' @param replace_confidential_values Replacement of confidential values ("..C") with another
   #' value e.g. NA or 0 or anything for that matter!
   #' @param long Whether the data should be returned in the long format or not.
+  #' @param clean True/False on whether to separate the original census column headers into year, 'topics' and 'variables'.
   #'
   #' @return It returns either a tibble or a simple features dataframe.
   #'
   #' @export
-  #' @importFrom dplyr mutate case_when
-  #' @importFrom stringr str_detect
-  #' @importFrom tidyr gather spread
-  #' @importFrom sf st_geometry st_transform
 
   # Replace confidential data
   if (!is.null(replace_confidential_values)) {
@@ -115,6 +112,10 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
 
   # Convert to long
   if (long == TRUE) data_set <- table_to_long(data_set)
+
+  # Clean columns
+  if (clean == TRUE & long == TRUE) data_set <- clean_census_columns(data_set)
+  else if (clean == TRUE & long == FALSE) stop("To clean the data, it must be long. Specifiy long = TRUE in read_nz_census_data()")
 
   return(data_set)
 }
