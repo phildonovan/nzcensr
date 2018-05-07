@@ -8,6 +8,11 @@ table_to_long <- function(data){
   #' @param data The data set to be transformed.
   #' @export
 
+  # Set NULL variables to avoid package test 'notes'
+  # data <- NULL
+  variable <- NULL
+  value <- NULL
+  geometry <- NULL
 
   if ("geometry" %in% colnames(data)) gather(data, variable, value, -1, -2, -3, -geometry)
   else gather(data, variable, value, -1, -2, -3)
@@ -29,6 +34,11 @@ clean_census_columns <- function(data){
   #' head(cleaned_data)
   #' @export
   #' @importFrom magrittr "%>%"
+
+  # Set NULL variables to avoid package test 'notes'
+  variable <- NULL
+  years <- NULL
+  topic <- NULL
 
   # Extract geography
   if ("sf" %in% class(data) | "sfc" %in% class(data)) {
