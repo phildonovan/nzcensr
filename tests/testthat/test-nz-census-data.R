@@ -43,5 +43,5 @@ test_that("nz-census-data works", {
       "individual_part_3b_tas", "Individual (Part 3B) data set at the territorial authority level"
     )
 
-  expect_equal(nz_census_data(), output)
+  expect_equal(nz_census_tables(), output)
 })
