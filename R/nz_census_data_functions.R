@@ -4,7 +4,7 @@
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
 
-nz_census_data <- function(table_name = data.frame()){
+nz_census_tables <- function(table_name = data.frame()){
   #' Get a table of census data available
   #'
   #' @description A function which shows what data sets are available and what they're called. For an
@@ -66,15 +66,15 @@ nz_census_data <- function(table_name = data.frame()){
   return(table_description)
 }
 
-read_nz_census_data <- function(data_set, replace_confidential_values = NULL, include_gis = TRUE,
+transform_census <- function(.data, replace_confidential_values = NULL, include_gis = TRUE,
                                 crs = 2198, long = FALSE, clean = FALSE){
-  #' Read in NZ census data
+  #' Transform nz census data
   #'
-  #' @description This function is a helper to read in the census data. Mainly meant for easy transformations
+  #' @description Performs various common manipulation tasks on the census data. Mainly meant for easy transformations
   #' such as whether to include the GIS data, what its CRS system should be (defaults to 2198) and whether it
   #' should come in the wide (default) or long format.
   #'
-  #' @param data_set The data set to be passed. See what_data_sets.
+  #' @param .data The data set to be passed. See what_.datas.
   #' @param include_gis If the data set should include the gis column (defaults to TRUE).
   #' @param crs The desired Coordinate Reference System of the data set (defaults to 2198). Only
   #' important if the data includes a geometry column.
@@ -92,7 +92,7 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
     if (!is.numeric(replace_confidential_values)) stop("Replacement value must be a number or NA_integer_")
 
     do_not_mutate <- c("Area_Code_and_Description", "Code", "Description", "geometry")
-    replace_confidential_cols <- colnames(data_set)[!(colnames(data_set) %in% do_not_mutate)]
+    replace_confidential_cols <- colnames(.data)[!(colnames(.data) %in% do_not_mutate)]
     replace_confidential_values <- as.character(replace_confidential_values)
 
     if(is.na(replace_confidential_values)) {
@@ -100,24 +100,24 @@ read_nz_census_data <- function(data_set, replace_confidential_values = NULL, in
     } else {
       replacement_function <- function(col) {as.integer(gsub(".*", replace_confidential_values, col))}
     }
-    data_set <- dplyr::mutate_at(data_set, dplyr::vars(replace_confidential_cols), dplyr::funs(replacement_function))
-    data_set <- sf::st_as_sf(data_set)
+    .data <- dplyr::mutate_at(.data, dplyr::vars(replace_confidential_cols), dplyr::funs(replacement_function))
+    .data <- sf::st_as_sf(.data)
   }
 
   # Drop geometry column
-  if (include_gis == FALSE) sf::st_geometry(data_set) <- NULL
+  if (include_gis == FALSE) sf::st_geometry(.data) <- NULL
 
   # Perform CRS transformation
-  if (include_gis == TRUE & crs != 2198) data_set <- sf::st_transform(data_set, crs)
+  if (include_gis == TRUE & crs != 2198) .data <- sf::st_transform(.data, crs)
 
   # Convert to long
-  if (long == TRUE) data_set <- table_to_long(data_set)
+  if (long == TRUE) .data <- table_to_long(.data)
 
   # Clean columns
-  if (clean == TRUE & long == TRUE) data_set <- clean_census_columns(data_set)
+  if (clean == TRUE & long == TRUE) .data <- clean_census_columns(.data)
   else if (clean == TRUE & long == FALSE) stop("To clean the data, it must be long. Specifiy long = TRUE in read_nz_census_data()")
 
-  return(data_set)
+  return(.data)
 }
 
 

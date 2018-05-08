@@ -24,7 +24,7 @@ The `nzcensr` package is mainly a data package to make it easy to import the New
 The package contains the following data sets:
 
 ```{r datasets, results='asis', echo = FALSE}
-knitr::kable(nzcensr::nz_census_data())
+knitr::kable(nzcensr::nz_census_tables())
 ```
 
 At present, it only has two functions:
@@ -40,7 +40,7 @@ Let's explore the dwelling data set at the regional level.
 library(nzcensr)
 
 # Read in data
-dwelling_regions_long <- read_nz_census_data(dwelling_regions, 
+dwelling_regions_long <- transform_census(dwelling_regions, 
                                           long = TRUE, 
                                           replace_confidential_values = NA_integer_, 
                                           include_gis = FALSE)
