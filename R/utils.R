@@ -58,15 +58,15 @@ clean_census_columns <- function(.data){
                   variable = stringr::str_replace(variable, "20.._Census_", ""),
 
                   # Create the topic variable by finding the location of the
-                  # first _[A-Z] and taking everything in front of it
+                  # first capital letter or digit preceded by an underscore _[A-Z] and taking everything in front of it
                   topic = stringr::str_sub(variable,
                                            start = 0,
-                                           end = stringr::str_locate(variable, "_[A-Z]")[row_number(), 1]) %>%
+                                           end = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 1]) %>%
                     stringr::str_replace_all("_", " "),
 
                   # Create the variable as the remaing part of the string after the "_[A-Z]"
                   variable = stringr::str_sub(variable,
-                                              start = stringr::str_locate(variable, "_[A-Z]")[row_number(), 2]) %>%
+                                              start = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 2]) %>%
                     stringr::str_replace_all("_", " ")
   )
 

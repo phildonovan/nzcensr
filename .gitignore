@@ -9,3 +9,6 @@ data-raw/csvs
 data-raw/gis
 inst/doc
 nzcensr.Rproj
+packrat
+pkgdown
+
