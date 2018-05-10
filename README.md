@@ -8,6 +8,8 @@
 A library largely composed of tables representing the [New Zealand Census](https://www.stats.govt.nz/) and a helper functions to manipulate them.
 The data can be either a normal dataframe (tibble) or a simple features data table (GIS).
 
+Check out the vignette and package help at [spatialanalytics.co.nz](https://www.spatialanalytics.co.nz/packages/nzcensr/).
+
 ## Installation
 
 To install the package:
