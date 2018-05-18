@@ -81,3 +81,37 @@ clean_census_columns <- function(.data){
   return(.data)
 }
 
+replace_confidential <- function(.data, replacement_value = NA_integer_){
+  #' Replace confidential values
+  #'
+  #' The NZ census commonly uses the notation of '..C' when values are below a
+  #' certain threshold that they may reveal private details of certain individuals.
+  #' However, it is often required in an analysis to replace these values and
+  #' convert the column to an integer (to include ..C they need to be character).
+  #'
+  #' This function takes the data set, and a replacement value and replaces all of the ..C values.
+  #' Mainly for use within the transform_census function.
+  #'
+  #' @param .data The data set to have its confidential values removed.
+  #' @param replacement_value The value to replace the confidential ones with. Defaults to NA_integer.
+  #' @export
+
+  # Need to actually convert to function.
+
+  if (!is.numeric(replacement_value)) stop("Replacement value must be a number or NA_integer_")
+
+  do_not_mutate <- c("Area_Code_and_Description", "Code", "Description", "geometry")
+  replace_confidential_cols <- colnames(.data)[!(colnames(.data) %in% do_not_mutate)]
+  replacement_value <- as.character(replacement_value)
+
+  if(is.na(replacement_value)) {
+    replacement_function <- function(col) {suppressWarnings(as.integer(col))}
+  } else {
+    replacement_function <- function(col) {as.integer(stringr::str_replace(col, "..C", replacement_value))}
+  }
+  .data <- dplyr::mutate_at(.data, dplyr::vars(replace_confidential_cols), dplyr::funs(replacement_function))
+  .data <- sf::st_as_sf(.data)
+
+  return(.data)
+}
+

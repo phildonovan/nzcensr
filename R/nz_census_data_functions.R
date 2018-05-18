@@ -89,19 +89,7 @@ transform_census <- function(.data, replace_confidential_values = NULL, include_
 
   # Replace confidential data
   if (!is.null(replace_confidential_values)) {
-    if (!is.numeric(replace_confidential_values)) stop("Replacement value must be a number or NA_integer_")
-
-    do_not_mutate <- c("Area_Code_and_Description", "Code", "Description", "geometry")
-    replace_confidential_cols <- colnames(.data)[!(colnames(.data) %in% do_not_mutate)]
-    replace_confidential_values <- as.character(replace_confidential_values)
-
-    if(is.na(replace_confidential_values)) {
-      replacement_function <- function(col) {suppressWarnings(as.integer(col))}
-    } else {
-      replacement_function <- function(col) {as.integer(gsub(".*", replace_confidential_values, col))}
-    }
-    .data <- dplyr::mutate_at(.data, dplyr::vars(replace_confidential_cols), dplyr::funs(replacement_function))
-    .data <- sf::st_as_sf(.data)
+    .data <- replace_confidential(.data, replace_confidential_values)
   }
 
   # Drop geometry column
