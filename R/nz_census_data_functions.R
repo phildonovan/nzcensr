@@ -4,12 +4,14 @@
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
 
-nz_census_tables <- function(table_name = data.frame()){
+nz_census_tables <- function(table_name = data.frame(), variables = FALSE){
   #' Get a table of census data available
   #'
   #' @description A function which shows what data sets are available and what they're called. For an
   #' indepth query of a data set specify the table.
-  #' @param table_name The name of the table that for a description. Defaults to false for all tables/
+  #'
+  #' @param table_name The name of the table that for a description. Defaults to false for all tables.
+  #' @param variables Whether to show variables of a table or not. Table must be specified.
   #'
   #' @return A table describing the data sets or data set.
   #' @export
@@ -58,8 +60,25 @@ nz_census_tables <- function(table_name = data.frame()){
     # Check table exists
     table_name_string <- deparse(substitute(table_name))
     if (table_name_string %in% table_description[["dataset"]]) {
-      # Return the tables column names
-      table_description <- tibble::as_tibble(list(columm = colnames(table_name)))
+
+      # Return table topics
+      table_headers <- colnames(table_name)
+      table_topics <- table_headers[stringr::str_detect(table_headers, "Census")]
+      table_topics_clean <- extract_topics(table_topics) %>%
+        stringr::str_replace_all(" ", "_")
+
+      table_description <- as_tibble(list(topics = table_topics_clean))
+
+      # If variables == TRUE, then return dataframe with variables.
+      if (variables){
+        table_topics_clean <- extract_topics(table_topics, unique_topics = FALSE) %>%
+          stringr::str_replace_all(" ", "_")
+        table_variables_clean <- extract_variables(table_topics)
+
+        table_description <- as_tibble(list(topic = table_topics_clean,
+                                            variable = table_variables_clean))
+      }
+
     }
   }
 
@@ -107,5 +126,4 @@ transform_census <- function(.data, replace_confidential_values = NULL, include_
 
   return(.data)
 }
-
 

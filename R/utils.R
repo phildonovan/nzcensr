@@ -115,3 +115,95 @@ replace_confidential <- function(.data, replacement_value = NA_integer_){
   return(.data)
 }
 
+extract_topics <- function(raw_topics, unique_topics = TRUE){
+  #' Extract topic
+  #'
+  #' Extracts the topics for a raw census column from a vector strings.
+  #'
+  #' @param raw_topics A vector of raw topics.
+  #' @param unique_topics Whether the results should be unique or not. Defaults to TRUE.
+  #'
+  #' @return A vector of topics
+
+  # Get unique values
+  raw_topics <- unique(raw_topics)
+
+  # Strip away year
+  no_year <- stringr::str_replace(raw_topics, "^20.._Census_", "")
+
+  # Locate the first capital letter.
+  capital_letter_locations <- stringr::str_locate(no_year, "_[A-Z]|_[0-9]")[,1]
+
+  # Generate sequence to iterate over
+  sequence <- seq_along(no_year)
+  cleaned_topics <- sapply(sequence, function(x){
+    stringr::str_sub(no_year[x], start = 0, end = capital_letter_locations[x] - 1) %>%
+      stringr::str_replace_all("_", " ")
+  })
+
+  if (unique_topics == TRUE) cleaned_topics <- unique(cleaned_topics)
+
+  return(cleaned_topics)
+}
+
+extract_variables <- function(raw_variables){
+  #' Extract variable
+  #'
+  #' Extracts the variables for a raw census column from a vector strings.
+  #'
+  #'
+  #' @param raw_variables A vector of census columns containing the raw variables.
+  #'
+  #' @return A vector of variables
+
+  # Get unique values
+  raw_variables <- unique(raw_variables)
+
+  # Strip away year
+  no_year <- stringr::str_replace(raw_variables, "^20.._Census_", "")
+
+  # Locate the first capital letter.
+  capital_letter_locations <- stringr::str_locate(no_year, "_[A-Z]|_[0-9]")[,2]
+
+  # Generate sequence to iterate over
+  sequence <- seq_along(no_year)
+  sapply(sequence, function(x){
+    stringr::str_sub(no_year[x],
+                     start = capital_letter_locations[x]) %>%
+      stringr::str_replace_all("_", " ")
+  })
+}
+
+select_census_topics <- function(.data, topics, exclude = FALSE){
+  #' Filter the census topics in a census dataframe
+  #'
+  #' This is a helper function for quickly and easily selecting or excluding topics in a nz census data set.
+  #'
+  #' @param .data The data frame from which the topics should be selected/excluded from.
+  #' @param topics The census topics to be selected or excluded.
+  #' @param exclude Whether the topics should be selected or excluded.
+  #'
+  #' @return A dataframe
+
+  # Protect regular expression characters
+  topics_protected <- str_replace_all(topics, "(\\W)", "\\\\\\1")
+  topics_regex <- paste(topics_protected, collapse = "|")
+
+  # Detect the columns that match the vectors given.
+  all_columns <- colnames(.data)
+  topic_column_match <- str_detect(all_columns, topics_regex)
+
+  # Flip the logical if the excluding.
+  if (exclude == TRUE) topic_column_match <- !topic_column_match
+
+  # Check that the topics are actually in the dataframe
+  if (any(topic_column_match) == FALSE) stop("No columns match the topics you've given me in the data set.")
+
+  # Get the column names that match (including the description columns e.g. Description, Code, geometry etc.)
+  descriptive_columns <- all_columns[!str_detect(all_columns, "Census")]
+  matching_columns <- all_columns[topic_column_match]
+  wanted_columns <- c(descriptive_columns, matching_columns)
+
+  # Select and return data frame.
+  select(.data, one_of(wanted_columns))
+}
