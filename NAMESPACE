@@ -3,6 +3,7 @@
 export(clean_census_columns)
 export(nz_census_tables)
 export(replace_confidential)
+export(select_census_topics)
 export(table_to_long)
 export(transform_census)
 import(dplyr)

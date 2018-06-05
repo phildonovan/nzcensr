@@ -76,7 +76,8 @@ nz_census_tables <- function(table_name = data.frame(), variables = FALSE){
         table_variables_clean <- extract_variables(table_topics)
 
         table_description <- as_tibble(list(topic = table_topics_clean,
-                                            variable = table_variables_clean))
+                                            variable = table_variables_clean)) %>%
+          distinct(topic, variable)
       }
 
     }

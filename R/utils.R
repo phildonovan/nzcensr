@@ -128,7 +128,7 @@ extract_topics <- function(raw_topics, unique_topics = TRUE){
   # Get unique values
   raw_topics <- unique(raw_topics)
 
-  # Strip away year
+  # Extract years and then strip away year
   no_year <- stringr::str_replace(raw_topics, "^20.._Census_", "")
 
   # Locate the first capital letter.
@@ -184,6 +184,7 @@ select_census_topics <- function(.data, topics, exclude = FALSE){
   #' @param exclude Whether the topics should be selected or excluded.
   #'
   #' @return A dataframe
+  #' @export
 
   # Protect regular expression characters
   topics_protected <- str_replace_all(topics, "(\\W)", "\\\\\\1")
