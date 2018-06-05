@@ -16,13 +16,6 @@ To install the package:
 
     devtools::install_github(phildonovan/nzcensr)
 
-## Usage
-
-The `nzcensr` package is a package that makes it easy to use NZ census data. 
-It brings all of the tables from the NZ census into R: dwelling, family, household, individual part 1, individual part 2, individual part 3a, and individual part 3b. 
-These tables are all available at the five different geographical levels: meshblocks, area units, local boards, territorial authorities and regions along with the geographies.
-All of these tables are only loaded when called ('lazy loading').
-
 ## Author
 
   * Phil Donovan
