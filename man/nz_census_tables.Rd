@@ -4,10 +4,12 @@
 \alias{nz_census_tables}
 \title{Get a table of census data available}
 \usage{
-nz_census_tables(table_name = data.frame())
+nz_census_tables(table_name = data.frame(), variables = FALSE)
 }
 \arguments{
-\item{table_name}{The name of the table that for a description. Defaults to false for all tables/}
+\item{table_name}{The name of the table that for a description. Defaults to false for all tables.}
+
+\item{variables}{Whether to show variables of a table or not. Table must be specified.}
 }
 \value{
 A table describing the data sets or data set.
