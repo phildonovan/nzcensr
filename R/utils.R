@@ -48,7 +48,7 @@ clean_census_columns <- function(.data){
     sf::st_geometry(.data) <- NULL
   } else is_geog <- FALSE
 
-  # Split out year, topic and variable from variable
+  # Extract year and create cleaned variable variable.
   .data <- mutate(.data,
 
                   # Extract the year
@@ -60,18 +60,20 @@ clean_census_columns <- function(.data){
                   # Create the topic variable by finding the location of the
                   # first capital letter or digit preceded by an underscore _[A-Z] and taking everything in front of it
                   topic = stringr::str_sub(variable,
-                                           start = 0,
-                                           end = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 1]) %>%
+                                            start = 0,
+                                            end = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 1]) %>%
                     stringr::str_replace_all("_", " "),
 
                   # Create the variable as the remaing part of the string after the "_[A-Z]"
-                  variable = stringr::str_sub(variable,
-                                              start = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 2]) %>%
-                    stringr::str_replace_all("_", " ")
+                  cleaned_variable = stringr::str_sub(variable,
+                                                       start = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 2]) %>%
+                    stringr::str_replace_all("_", " "),
+
+                  cleaned_variable = ifelse(is.na(cleaned_variable), variable, cleaned_variable)
   )
 
   # Create new data frame and get all of the column in the desired order.
-  .data <- select(.data, 1:3, year, topic, variable, value)
+  .data <- select(.data, 1:3, year, topic, variable = cleaned_variable, value)
 
   # Add the geometry column back in if it was present in the first place.
   if (is_geog) {
