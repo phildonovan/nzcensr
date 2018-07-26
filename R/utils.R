@@ -61,12 +61,12 @@ clean_census_columns <- function(.data){
                   # first capital letter or digit preceded by an underscore _[A-Z] and taking everything in front of it
                   topic = stringr::str_sub(variable,
                                             start = 0,
-                                            end = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 1]) %>%
+                                            end = stringr::str_locate(variable, "_[A-Z]|_[0-9]|_\\$")[row_number(), 1]) %>%
                     stringr::str_replace_all("_", " "),
 
                   # Create the variable as the remaing part of the string after the "_[A-Z]"
                   cleaned_variable = stringr::str_sub(variable,
-                                                       start = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 2]) %>%
+                                                       start = stringr::str_locate(variable, "_[A-Z]|_[0-9]|_\\$")[row_number(), 2]) %>%
                     stringr::str_replace_all("_", " "),
 
                   cleaned_variable = ifelse(is.na(cleaned_variable), variable, cleaned_variable)
