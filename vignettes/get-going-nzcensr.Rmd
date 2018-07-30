@@ -86,7 +86,7 @@ This function provides several options to organise and manipulate the data, such
 Firstly, let's filter out the data using the `select_census_topics` function which makes it easy to select columns based on a specific topic, and then transform it into the long format, without the GIS geometry column, replacing the confidential ('..C') values, and with the topics and variables split out from each other.
 
 ```{r}
-nz_fuel_types_by_region <- select_census_topics(dwelling_regions,
+nz_fuel_types_by_region <- select_by_topics(dwelling_regions,
                                                 "fuel_types_used_to_heat_dwellings_(total_responses)(4)_for_occupied_private_dwellings") %>% 
   transform_census(replace_confidential_values = NA_integer_,
                    long = TRUE, 

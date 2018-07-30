@@ -14,6 +14,8 @@ nz_census_tables <- function(table_name = data.frame(), variables = FALSE){
   #' @param variables Whether to show variables of a table or not. Table must be specified.
   #'
   #' @return A table describing the data sets or data set.
+  #'
+  #' @importFrom tibble tribble
   #' @export
 
   table_description <-
