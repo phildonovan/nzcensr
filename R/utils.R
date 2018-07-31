@@ -6,7 +6,6 @@ table_to_long <- function(data){
   #' @description Merely converts a census dataframe from wide to long.
   #'
   #' @param data The data set to be transformed.
-  #' @export
 
   # Set NULL values to remove notes
   variable <- NULL
@@ -31,8 +30,8 @@ clean_census_columns <- function(.data){
   #'   replace_confidential_values = NA_integer_)
   #' cleaned_data <- clean_census_columns(nz_dwelling_regions_long)
   #' head(cleaned_data)
-  #' @export
   #' @importFrom magrittr "%>%"
+  #' @export
 
   # Set NULL variables to avoid package test 'notes'
   variable <- NULL
@@ -48,7 +47,7 @@ clean_census_columns <- function(.data){
     sf::st_geometry(.data) <- NULL
   } else is_geog <- FALSE
 
-  # Split out year, topic and variable from variable
+  # Extract year and create cleaned variable variable.
   .data <- mutate(.data,
 
                   # Extract the year
@@ -60,18 +59,20 @@ clean_census_columns <- function(.data){
                   # Create the topic variable by finding the location of the
                   # first capital letter or digit preceded by an underscore _[A-Z] and taking everything in front of it
                   topic = stringr::str_sub(variable,
-                                           start = 0,
-                                           end = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 1]) %>%
+                                            start = 0,
+                                            end = stringr::str_locate(variable, "_[A-Z]|_[0-9]|_\\$")[row_number(), 1]) %>%
                     stringr::str_replace_all("_", " "),
 
-                  # Create the variable as the remaing part of the string after the "_[A-Z]"
-                  variable = stringr::str_sub(variable,
-                                              start = stringr::str_locate(variable, "_[A-Z]|_[0-9]")[row_number(), 2]) %>%
-                    stringr::str_replace_all("_", " ")
+                  # Create the variable as the remaining part of the string after the "_[A-Z]"
+                  cleaned_variable = stringr::str_sub(variable,
+                                                       start = stringr::str_locate(variable, "_[A-Z]|_[0-9]|_\\$")[row_number(), 2]) %>%
+                    stringr::str_replace_all("_", " "),
+
+                  topic = ifelse(is.na(cleaned_variable), variable, topic)
   )
 
   # Create new data frame and get all of the column in the desired order.
-  .data <- select(.data, 1:3, year, topic, variable, value)
+  .data <- select(.data, 1:3, year, topic, variable = cleaned_variable, value)
 
   # Add the geometry column back in if it was present in the first place.
   if (is_geog) {
@@ -94,7 +95,6 @@ replace_confidential <- function(.data, replacement_value = NA_integer_){
   #'
   #' @param .data The data set to have its confidential values removed.
   #' @param replacement_value The value to replace the confidential ones with. Defaults to NA_integer.
-  #' @export
 
   # Need to actually convert to function.
 
@@ -174,13 +174,18 @@ extract_variables <- function(raw_variables){
   })
 }
 
-select_census_topics <- function(.data, topics, exclude = FALSE){
+## Select & filter functions.
+
+select_by_topic <- function(.data, topics, exclude = FALSE){
   #' Filter the census topics in a census dataframe
   #'
-  #' This is a helper function for quickly and easily selecting or excluding topics in a nz census data set.
+  #' This is a helper function for quickly and easily selecting or excluding topics in a NZ census data set.
+  #'
+  #' Just a wrapper around a str_detect("pattern_1|pattern_2") selection.
   #'
   #' @param .data The data frame from which the topics should be selected/excluded from.
-  #' @param topics The census topics to be selected or excluded.
+  #' @param topics A vector of census topics to be selected or excluded e.g.
+  #' (c("number_of_rooms_for_occupied_private_dwellings", "number_of_bedrooms_for_occupied_private_dwellings")).
   #' @param exclude Whether the topics should be selected or excluded.
   #'
   #' @return A dataframe
@@ -208,3 +213,80 @@ select_census_topics <- function(.data, topics, exclude = FALSE){
   # Select and return data frame.
   select(.data, one_of(wanted_columns))
 }
+
+
+filter_by_area <- function(.data, geographic_level, geographic_filter, pattern){
+
+  #' Filters census data by area
+  #'
+  #' Filters a census table by another area e.g. meshblocks by territorial area or region.
+  #' It can only work if the geographic level is at a greater scale than the input data e.g.
+  #' meshblocks < area_units < wards < local boards < territoral authorities < regions
+  #'
+  #' @param .data The data set to be filtered. Must contain a column with census spatial
+  #' names in it e.g. (Area_Code_and_Description).
+  #' @param geographic_level The geographic level of the input spatial data e.g. area_units.
+  #' @param geographic_filter The geographic level of the spatial filter e.g. region.
+  #' @param pattern The pattern to match the area to filter by e.g. 'Wellington Region'.
+  #'
+  #' @return A sf dataframe.
+  #'
+  #' @importFrom stringr str_detect str_interp
+  #' @importFrom dplyr filter select
+  #' @importFrom sf st_set_geometry
+  #' @importFrom tidyr unite
+  #' @export
+
+  # Check if a Area_Code_and_Description column is present
+  if (!('Area_Code_and_Description' %in% colnames(.data))) {
+    stop("Area_Code_and_Description is needed in the input data")
+  }
+
+  # Check is the geographic level is available.
+  g_levels <- c("meshblocks", "area_units", "wards", "local_boards", "tas", "regions")
+  if (!(geographic_level %in% g_levels)){
+    stop(stringr::str_interp("Incorrect geographic levels specified. Must be one of: ${paste(g_levels, collapse = ', ')}"))
+  }
+
+  # Check if the geographic level matches the available levels
+  if (any(stringr::str_detect(geographic_level, g_levels)) == FALSE){
+    stop(stringr::str_interp("Doesn't appear to be any geographic match for ${geographic_level} in the geographic levels: ${paste(g_levels, collapse = ', ')}"))
+  }
+
+  # Check if the geographic level of the input data is lower than the geographic level specified.
+  geographic_levels <- factor(g_levels, levels = g_levels)
+  .data_geographic_match <- geographic_levels[str_detect(geographic_level, g_levels)]
+  geographic_filter_factor <- geographic_levels[str_detect(geographic_filter, g_levels)]
+
+  if (.data_geographic_match %>% as.integer > geographic_filter_factor %>% as.integer){
+    stop("The input geographic area is at a larger scale than the filter by area. You can only filter by geographic levels which are equal or more than the input data. Remember: meshblocks < area_units < wards < local boards < territoral authorities < regions.")
+  }
+
+  # Add in filter of function here. NB: Meshblock cannot be filtered by.
+  name_concordance <- list(meshblocks = c("MB2013"), "area_units" = c("AU2013", "AU2013_NAM"),
+                           "tas" = c("TA2013", "TA2013_NAM"), "wards" = c("WARD2013", "WARD2013_N"),
+                           "local_boards" = c("CB2013", "CB2013_NAM"), "regions" = c("REGC2013", "REGC2013_N"))
+
+  # I need to create and compare the Area_Code_Description to the
+  .data_geography <- as.character(.data_geographic_match)
+  wanted_columns <- c(name_concordance[[.data_geography]], name_concordance[[geographic_filter]])
+
+  # Get the ids from the meshblock concordance table.
+  wanted_areas <- meshblocks %>%
+    sf::st_set_geometry(NULL) %>%
+    dplyr::select(one_of(wanted_columns)) %>%
+    tidyr::unite(lower_geo, one_of(name_concordance[[.data_geography]]), sep = " ", remove = FALSE) %>%
+    tidyr::unite(upper_geo, one_of(name_concordance[[geographic_filter]]), sep = " ", remove = FALSE) %>%
+    mutate(upper_geo = stringr::str_to_lower(upper_geo)) %>%
+    dplyr::filter(stringr::str_detect(upper_geo, stringr::str_to_lower(pattern))) %>%
+    dplyr::pull(lower_geo) %>%
+    unique
+
+  # If the lower level is meshblocks, then paste the "MB " onto the
+  # front so that it matches the Area_Code_and_Description meshblock id.
+  if (.data_geography == "meshblocks") wanted_areas <- paste0("MB ", wanted_areas)
+
+  # Filter data
+  dplyr::filter(.data, Area_Code_and_Description %in% wanted_areas)
+}
+

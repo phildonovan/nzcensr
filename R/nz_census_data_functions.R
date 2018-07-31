@@ -14,6 +14,8 @@ nz_census_tables <- function(table_name = data.frame(), variables = FALSE){
   #' @param variables Whether to show variables of a table or not. Table must be specified.
   #'
   #' @return A table describing the data sets or data set.
+  #'
+  #' @importFrom tibble tribble
   #' @export
 
   table_description <-
@@ -123,7 +125,7 @@ transform_census <- function(.data, replace_confidential_values = NULL, include_
 
   # Clean columns
   if (clean == TRUE & long == TRUE) .data <- clean_census_columns(.data)
-  else if (clean == TRUE & long == FALSE) stop("To clean the data, it must be long. Specifiy long = TRUE in read_nz_census_data()")
+  else if (clean == TRUE & long == FALSE) stop("To clean the data, it must be in the long format. Specifiy long = TRUE in the call.")
 
   return(.data)
 }

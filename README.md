@@ -14,7 +14,7 @@ Check out the vignette and package help at [spatialanalytics.co.nz](https://www.
 
 To install the package:
 
-    devtools::install_github(phildonovan/nzcensr)
+    devtools::install_github("phildonovan/nzcensr"")
 
 ## Author
 
