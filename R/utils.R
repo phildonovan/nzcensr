@@ -137,8 +137,12 @@ extract_topics <- function(raw_topics, unique_topics = TRUE){
   # Generate sequence to iterate over
   sequence <- seq_along(no_year)
   cleaned_topics <- sapply(sequence, function(x){
-    stringr::str_sub(no_year[x], start = 0, end = capital_letter_locations[x] - 1) %>%
+    cleaned_topic <- stringr::str_sub(no_year[x], start = 0, end = capital_letter_locations[x] - 1) %>%
       stringr::str_replace_all("_", " ")
+
+    if (is.na(cleaned_topic)) cleaned_topic <- no_year[x]
+
+    return(cleaned_topic)
   })
 
   if (unique_topics == TRUE) cleaned_topics <- unique(cleaned_topics)
@@ -168,7 +172,7 @@ extract_variables <- function(raw_variables){
   # Generate sequence to iterate over
   sequence <- seq_along(no_year)
   sapply(sequence, function(x){
-    stringr::str_sub(no_year[x],
+    cleaned_variable <- stringr::str_sub(no_year[x],
                      start = capital_letter_locations[x]) %>%
       stringr::str_replace_all("_", " ")
   })

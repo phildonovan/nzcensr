@@ -90,8 +90,34 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
+<p>Please be aware that this is a rather large package due to the amount of data contained within it, and therefore takes a little while to download.</p>
 <p>To install the package:</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(phildonovan<span class="op">/</span>nzcensr)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"phildonovan/nzcensr"</span>)</code></pre></div>
+</div>
+<div id="getting-going" class="section level2">
+<h2 class="hasAnchor">
+<a href="#getting-going" class="anchor"></a>Getting going</h2>
+<p>Four main functions for use:</p>
+<ul>
+<li>
+<code>nz_census_tables</code>: returns tables describing the different tables and optionally the topics and variables within each table.</li>
+<li>
+<code>select_by_topic</code>: selects from a regular ‘wide’ census table the topic by pattern matching.</li>
+<li>
+<code>filter_by_area</code>: filters out a census table based on geographical areas within and larger geographical area e.g. area units within the Auckland Regions.</li>
+<li>
+<code>transform_census</code>: performs different functions to the data such as transforming it to long, or cleaning the variables.</li>
+</ul>
+<p>Let’s take a quick look.</p>
+<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="co"># Load libraries</span>
+<span class="kw">library</span>(nzcensr)
+<span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(sf)
+
+<span class="co"># Select topic, filter area units within Hamilton, and transform</span>
+hamilton_city_council_ethnic_groups &lt;-<span class="st"> </span><span class="kw"><a href="reference/select_by_topic.html">select_by_topic</a></span>(individual_part_1_area_units, <span class="st">"ethnic"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="reference/filter_by_area.html">filter_by_area</a></span>(<span class="st">"area_units"</span>, <span class="st">"tas"</span>, <span class="st">"hamilton"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="reference/transform_census.html">transform_census</a></span>(<span class="dt">long =</span> <span class="ot">TRUE</span>, <span class="dt">clean =</span> <span class="ot">TRUE</span>, <span class="dt">replace_confidential_values =</span> <span class="dv">1</span>)</code></pre></div>
 </div>
 <div id="author" class="section level2">
 <h2 class="hasAnchor">

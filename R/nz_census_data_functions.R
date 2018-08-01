@@ -69,6 +69,8 @@ nz_census_tables <- function(table_name = data.frame(), variables = FALSE){
       table_topics_clean <- extract_topics(table_topics) %>%
         stringr::str_replace_all(" ", "_")
 
+      if (any(is.na(table_topics_clean))) print(table_topics_clean)
+
       table_description <- as_tibble(list(topics = table_topics_clean))
 
       # If variables == TRUE, then return dataframe with variables.
