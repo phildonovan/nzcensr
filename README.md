@@ -12,9 +12,25 @@ Check out the vignette and package help at [spatialanalytics.co.nz](https://www.
 
 ## Installation
 
+Please be aware that this is a rather large package due to the amount of data contained within it, and therefore takes a little while to download. 
+
 To install the package:
 
-    devtools::install_github("phildonovan/nzcensr"")
+    devtools::install_github("phildonovan/nzcensr")
+    
+# Get going
+
+Three main functions for use:
+
+    # Load libraries
+    library(nzcensr)
+    library(tidyverse)
+    library(sf)
+    
+    # Select topic, filter to Hamilton, transform
+    hamilton_city_council_ethnic_groups <- select_by_topic() %>% 
+      filter_by_area() %>% 
+      transform_census(long = TRUE, clean = TRUE, replace_confidential_values = 1)
 
 ## Author
 

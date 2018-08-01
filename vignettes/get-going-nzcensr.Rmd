@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 )
 
 library(nzcensr)
+library(sf)
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(DT))
 ```
@@ -50,7 +51,7 @@ On top of making these data sets easily available, it also makes it easy to impo
 
 ## Exploring the census -- the data available.
 
-A key idea behind this package is the idea of making it easier to access and *know* what data is available.
+A key idea behind this package is the idea of making it easier to access, *know* what data is available and make it easier to analyse.
 The function `nz_census_tables` makes it easy to explore the data. Simply calling it without any arguments returns a table with all of the data frames available, and a small note explining what they are:
 
 ```{r}
@@ -69,49 +70,89 @@ or
 DT::datatable(nz_census_tables(dwelling_area_units, variables = TRUE))
 ```
 
-Of course, it probably makes sense to explore variables for a single topic:
+# Religious association in New Zealand
 
-```{r}
-nz_census_tables(dwelling_area_units, variables = TRUE) %>% 
-  filter(topic == "fuel_types_used_to_heat_dwellings_(total_responses)(4)_for_occupied_private_dwellings") %>% DT::datatable(.)
+Let's have a look at religious association in Auckland, New Zealand.
+Firstly, let's select the topic using the keyword religion, and then transform into the long format that is 'cleaned' and replace the confidential values with 1.
+By cleaned, the census columns are split up into year, topic and variable columns. 
+
+```{r get_data}
+religious_association_nz_region <- 
+  select_by_topic(individual_part_2_regions, "religious") %>% 
+  filter_by_area("regions", "regions", "Auckland") %>% 
+  transform_census(include_gis = FALSE, long = TRUE, 
+                   clean = TRUE, replace_confidential_values = 1)
 ```
 
-## Analysing the data -- Household fuels in New Zealand by region
+The above workflow essentially encapsulates the workflow brought to the user by the `nzcenrs` package which makes it easy to access the data, select the topics wanted, filter by regions and transform in a 'tidy' table.
+The output of this is the following table:
 
-Cool, now we have a few functions to explore the data, let's have a look at the types of fuel used in New Zealand by region by making a nice plot.
-This information is contained in the dwelling data set which we can call with `dwelling_regions`.
-However, this is still a relatively 'dirty' data set in the wide format and not conducive to plotting in ggplot.
-To easily transform the data, use the function called `transform_census`. 
-This function provides several options to organise and manipulate the data, such as: whether you want it in long or wide form, gis columns, replacement of confidential values, cleaned and split out to topics and variables.
-Firstly, let's filter out the data using the `select_census_topics` function which makes it easy to select columns based on a specific topic, and then transform it into the long format, without the GIS geometry column, replacing the confidential ('..C') values, and with the topics and variables split out from each other.
-
-```{r}
-nz_fuel_types_by_region <- select_by_topic(dwelling_regions,
-                                                "fuel_types_used_to_heat_dwellings_(total_responses)(4)_for_occupied_private_dwellings") %>% 
-  transform_census(replace_confidential_values = NA_integer_,
-                   long = TRUE, 
-                   clean = TRUE,
-                   include_gis = FALSE)
-DT::datatable(nz_fuel_types_by_region)
+```{r echo = FALSE}
+religious_association_nz_region %>% 
+  head(1) %>% 
+  DT::datatable()
 ```
 
-OK, that is in a nice format.
-Let's plot a bar chart of the different fuel types by region.
+Cool, that is all tidy. 
+For comparison sake, let us create a percentage of people as opposed to absolute numbers.
+To do this, we create two tables of the religions and the totals and then join them back to each other based on the region.
+Then we can simply divide the religion number by the total and create a percentage.
 
-```{r, fig.height=10, fig.width=10}
-nz_fuel_types_by_region_refined <- filter(nz_fuel_types_by_region,
-                                          variable %in% c("Bottled Gas", "Coal", "Electricity",
-                                                          "Other Fuel(s)", "Solar Power", "Wood"),
-                                          Description != "Area Outside Region")
+```{r percentage_religion}
+religious_association_nz_region_wanted_variables <- 
+  filter(religious_association_nz_region,
+         !(variable %in% c("Not Elsewhere Included(3)", 
+                           "Total people",
+                           "Total people stated",
+                           "Object to Answering",
+                           "Other Religions",
+                           "Spiritualism and New Age Religions"))) %>% 
+  rename(number_people = value)
 
-ggplot(nz_fuel_types_by_region_refined, aes(x = Description, y = value, colour = variable, fill = variable)) +
-  geom_col(position = "dodge") +
-  scale_fill_discrete(name = "Fuel type") +
-  scale_colour_discrete(name = "Fuel type") +
-  xlab("Region") +
-  ylab("Number of Dwellings") +
-  ggtitle("The number of dwellings using different types of fuel by region in New Zealand.") +
-  theme(legend.position="top", legend.direction="horizontal") +
-  coord_flip() +
-  theme_bw()
+religious_association_nz_region_total_stated <- religious_association_nz_region %>% 
+  filter(variable == "Total people stated") %>% 
+  select(Area_Code_and_Description, year, total_number_people = value)
+
+religious_association_nz_region_percent <- 
+  left_join(religious_association_nz_region_wanted_variables,
+            religious_association_nz_region_total_stated) %>% 
+  mutate(percentage_people = round(number_people / total_number_people, 4) * 100,
+         Description = str_replace(Description, " Region", "")) %>% 
+  select(-topic)
 ```
+
+Now to create a line plot to investigate the trends the three time periods.
+
+```{r region_line_plot, fig.width=7, fig.height=7}
+ggplot(religious_association_nz_region_percent) +
+  geom_line(aes(x = year, y = percentage_people, colour = variable, group = variable)) +
+  scale_colour_discrete(name = "Religion") +
+  ggtitle("Religion as a percentage of population in Auckland from\n2001 to 2006 to 2013") +
+  ylab("Percent") +
+  xlab("Year") + 
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+Interesting, in these plots you can clearly see the 'decline' of Christianity occuring the increasing 'lack of religion'. 
+Clearly, these two categories dwarf the others, and it would be interesting to drop these out to see more of the minor religions.
+
+```{r minor_religions, fig.width=6, fig.height=6}
+religious_association_nz_region_percent_minors <- 
+  filter(religious_association_nz_region_percent,
+         !(variable %in% c("Christian", "No Religion")))
+
+ggplot(religious_association_nz_region_percent_minors) +
+  geom_line(aes(x = year, y = percentage_people, colour = variable, group = variable)) +
+  facet_wrap(~Description, scales = "free_y") +
+  scale_colour_discrete(name = "Religion") +
+  ggtitle("Religion as a percentage of population in Auckland from\n2001 to 2006 to 2013") +
+  ylab("Percent") +
+  xlab("Year") + 
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+Some interesting things going on here!
+Anyway, I hope I have demonstrated how easy it is to analyse NZ census data with the `nzcensr` package.
+It's brand new, and my first package, so please let me know if you find any issues or bugs.
