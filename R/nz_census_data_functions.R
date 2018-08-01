@@ -91,16 +91,16 @@ nz_census_tables <- function(table_name = data.frame(), variables = FALSE){
 }
 
 transform_census <- function(.data, replace_confidential_values = NULL, include_gis = TRUE,
-                                crs = 2198, long = FALSE, clean = FALSE){
+                                crs = 2193, long = FALSE, clean = FALSE){
   #' Transform nz census data
   #'
   #' @description Performs various common manipulation tasks on the census data. Mainly meant for easy transformations
-  #' such as whether to include the GIS data, what its CRS system should be (defaults to 2198) and whether it
+  #' such as whether to include the GIS data, what its CRS system should be (defaults to 2193 -- NZTM) and whether it
   #' should come in the wide (default) or long format.
   #'
   #' @param .data The data set to be passed. See what_.datas.
   #' @param include_gis If the data set should include the gis column (defaults to TRUE).
-  #' @param crs The desired Coordinate Reference System of the data set (defaults to 2198). Only
+  #' @param crs The desired Coordinate Reference System of the data set (defaults to 2193). Only
   #' important if the data includes a geometry column.
   #' @param replace_confidential_values Replacement of confidential values ("..C") with another
   #' value e.g. NA or 0 or anything for that matter!
@@ -120,7 +120,7 @@ transform_census <- function(.data, replace_confidential_values = NULL, include_
   if (include_gis == FALSE) sf::st_geometry(.data) <- NULL
 
   # Perform CRS transformation
-  if (include_gis == TRUE & crs != 2198) .data <- sf::st_transform(.data, crs)
+  if (include_gis == TRUE & crs != 2193) .data <- sf::st_transform(.data, crs)
 
   # Convert to long
   if (long == TRUE) .data <- table_to_long(.data)

@@ -5,7 +5,7 @@
 \title{Transform nz census data}
 \usage{
 transform_census(.data, replace_confidential_values = NULL,
-  include_gis = TRUE, crs = 2198, long = FALSE, clean = FALSE)
+  include_gis = TRUE, crs = 2193, long = FALSE, clean = FALSE)
 }
 \arguments{
 \item{.data}{The data set to be passed. See what_.datas.}
@@ -15,7 +15,7 @@ value e.g. NA or 0 or anything for that matter!}
 
 \item{include_gis}{If the data set should include the gis column (defaults to TRUE).}
 
-\item{crs}{The desired Coordinate Reference System of the data set (defaults to 2198). Only
+\item{crs}{The desired Coordinate Reference System of the data set (defaults to 2193). Only
 important if the data includes a geometry column.}
 
 \item{long}{Whether the data should be returned in the long format or not.}
@@ -27,6 +27,6 @@ It returns either a tibble or a simple features dataframe.
 }
 \description{
 Performs various common manipulation tasks on the census data. Mainly meant for easy transformations
-such as whether to include the GIS data, what its CRS system should be (defaults to 2198) and whether it
+such as whether to include the GIS data, what its CRS system should be (defaults to 2193 -- NZTM) and whether it
 should come in the wide (default) or long format.
 }

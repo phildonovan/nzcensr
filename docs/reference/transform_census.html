@@ -35,7 +35,7 @@
 <meta property="og:title" content="Transform nz census data — transform_census" />
 
 <meta property="og:description" content="Performs various common manipulation tasks on the census data. Mainly meant for easy transformations
-such as whether to include the GIS data, what its CRS system should be (defaults to 2198) and whether it
+such as whether to include the GIS data, what its CRS system should be (defaults to 2193 -- NZTM) and whether it
 should come in the wide (default) or long format." />
 <meta name="twitter:card" content="summary" />
 
@@ -125,13 +125,13 @@ should come in the wide (default) or long format." />
     <div class="ref-description">
     
     <p>Performs various common manipulation tasks on the census data. Mainly meant for easy transformations
-such as whether to include the GIS data, what its CRS system should be (defaults to 2198) and whether it
+such as whether to include the GIS data, what its CRS system should be (defaults to 2193 -- NZTM) and whether it
 should come in the wide (default) or long format.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>transform_census</span>(<span class='no'>.data</span>, <span class='kw'>replace_confidential_values</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>include_gis</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='fl'>2198</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>clean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>include_gis</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='fl'>2193</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>clean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,7 +151,7 @@ value e.g. NA or 0 or anything for that matter!</p></td>
     </tr>
     <tr>
       <th>crs</th>
-      <td><p>The desired Coordinate Reference System of the data set (defaults to 2198). Only
+      <td><p>The desired Coordinate Reference System of the data set (defaults to 2193). Only
 important if the data includes a geometry column.</p></td>
     </tr>
     <tr>

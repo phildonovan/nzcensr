@@ -196,7 +196,8 @@ select_by_topic <- function(.data, topics, exclude = FALSE){
   #' @export
 
   # Protect regular expression characters
-  topics_protected <- str_replace_all(topics, "(\\W)", "\\\\\\1")
+  topics_protected <- str_replace_all(topics, " ", "_") %>%
+    str_replace_all("(\\W)", "\\\\\\1")
   topics_regex <- paste(topics_protected, collapse = "|")
 
   # Detect the columns that match the vectors given.
