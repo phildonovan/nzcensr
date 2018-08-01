@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Clean variables — clean_census_columns • nzcensr</title>
+<title>Filter the census topics in a census dataframe — select_by_topic • nzcensr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Clean variables — clean_census_columns" />
+<meta property="og:title" content="Filter the census topics in a census dataframe — select_by_topic" />
 
-<meta property="og:description" content="Cleans the variable names and splits them into columns in a long table." />
+<meta property="og:description" content="This is a helper function for quickly and easily selecting or excluding topics in a NZ census data set." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,52 +115,56 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Clean variables</h1>
+    <h1>Filter the census topics in a census dataframe</h1>
     
-    <div class="hidden name"><code>clean_census_columns.Rd</code></div>
+    <div class="hidden name"><code>select_by_topic.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Cleans the variable names and splits them into columns in a long table.</p>
+    <p>This is a helper function for quickly and easily selecting or excluding topics in a NZ census data set.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>clean_census_columns</span>(<span class='no'>.data</span>)</pre>
+    <pre class="usage"><span class='fu'>select_by_topic</span>(<span class='no'>.data</span>, <span class='no'>topics</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>The data frame to be cleaned. Must be a long dataframe returned by read_nz_census_data()</p></td>
+      <td><p>The data frame from which the topics should be selected/excluded from.</p></td>
+    </tr>
+    <tr>
+      <th>topics</th>
+      <td><p>A vector of census topics to be selected or excluded e.g.
+(c("number_of_rooms_for_occupied_private_dwellings", "number_of_bedrooms_for_occupied_private_dwellings")).</p></td>
+    </tr>
+    <tr>
+      <th>exclude</th>
+      <td><p>Whether the topics should be selected or excluded.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>nz_dwelling_regions_long</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='transform_census.html'>transform_census</a></span>(<span class='no'>dwelling_regions</span>,
-  <span class='kw'>include_gis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>replace_confidential_values</span> <span class='kw'>=</span> <span class='fl'>NA_integer_</span>)
-<span class='no'>cleaned_data</span> <span class='kw'>&lt;-</span> <span class='fu'>clean_census_columns</span>(<span class='no'>nz_dwelling_regions_long</span>)
-<span class='fu'>head</span>(<span class='no'>cleaned_data</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 7
-#&gt;   Area_Code_and_Des… Code  Description   year  topic         variable     value
-#&gt;   &lt;chr&gt;              &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;int&gt;
-#&gt; 1 01 Northland Regi… 01    Northland Re… 2001  "dwelling re… Occupied No…   471
-#&gt; 2 02 Auckland Region 02    Auckland Reg… 2001  "dwelling re… Occupied No…  1548
-#&gt; 3 03 Waikato Region  03    Waikato Regi… 2001  "dwelling re… Occupied No…   843
-#&gt; 4 04 Bay of Plenty … 04    Bay of Plent… 2001  "dwelling re… Occupied No…   528
-#&gt; 5 05 Gisborne Region 05    Gisborne Reg… 2001  "dwelling re… Occupied No…   114
-#&gt; 6 06 Hawke's Bay Re… 06    Hawke's Bay … 2001  "dwelling re… Occupied No…   342</div></pre>
+    <p>A dataframe</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Just a wrapper around a str_detect("pattern_1|pattern_2") selection.</p>
+    
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>

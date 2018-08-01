@@ -18,18 +18,25 @@ To install the package:
 
     devtools::install_github("phildonovan/nzcensr")
     
-# Get going
+## Getting going
 
-Three main functions for use:
+Four main functions for use:
+
+  * `nz_census_tables`: returns tables describing the different tables and optionally the topics and variables within each table.
+  * `select_by_topic`: selects from a regular 'wide' census table the topic by pattern matching.
+  * `filter_by_area`: filters out a census table based on geographical areas within and larger geographical area e.g. area units within the Auckland Regions.
+  * `transform_census`: performs different functions to the data such as transforming it to long, or cleaning the variables.
+  
+Let's take a quick look.
 
     # Load libraries
     library(nzcensr)
     library(tidyverse)
     library(sf)
     
-    # Select topic, filter to Hamilton, transform
-    hamilton_city_council_ethnic_groups <- select_by_topic() %>% 
-      filter_by_area() %>% 
+    # Select topic, filter area units within Hamilton, and transform
+    hamilton_city_council_ethnic_groups <- select_by_topic(individual_part_1_area_units, "ethnic") %>% 
+      filter_by_area("area_units", "tas", "hamilton") %>% 
       transform_census(long = TRUE, clean = TRUE, replace_confidential_values = 1)
 
 ## Author

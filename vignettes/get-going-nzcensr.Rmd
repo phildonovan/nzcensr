@@ -19,8 +19,8 @@ knitr::opts_chunk$set(
 
 library(nzcensr)
 library(sf)
+library(knitr)
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(DT))
 ```
 
 ## Introduction
@@ -47,34 +47,34 @@ or
 
 All of the data sets are lazily loaded which means that they are only brought into memory when called; not when the package is just loaded.
 
-On top of making these data sets easily available, it also makes it easy to import the data in a tidy way, using the function `transform_census`.
-
 ## Exploring the census -- the data available.
 
-A key idea behind this package is the idea of making it easier to access, *know* what data is available and make it easier to analyse.
-The function `nz_census_tables` makes it easy to explore the data. Simply calling it without any arguments returns a table with all of the data frames available, and a small note explining what they are:
+A key idea behind this package is the idea of making it easier to access and *know* what data is available and then to transform it.
+The function `nz_census_tables` makes it easy to explore the data. Simply calling it without any arguments returns a table with all of the data frames available, and a small note explaining what they are:
 
 ```{r}
-DT::datatable(nz_census_tables())
+kable(nz_census_tables())
 ```
 
 This function also accepts the input of a table which returns all of the unique topics in the data set, and whether to include the variables or not.
 
 ```{r}
-DT::datatable(nz_census_tables(dwelling_area_units))
+kable(nz_census_tables(dwelling_area_units))
 ```
 
-or
+or (table shows just the first ten for presentation)
 
 ```{r}
-DT::datatable(nz_census_tables(dwelling_area_units, variables = TRUE))
+nz_census_tables(dwelling_area_units, variables = TRUE) %>% 
+  slice(1:10) %>% 
+  kable()
 ```
 
-# Religious association in New Zealand
+## Religious affiliation in Auckland, New Zealand
 
 Let's have a look at religious association in Auckland, New Zealand.
 Firstly, let's select the topic using the keyword religion, and then transform into the long format that is 'cleaned' and replace the confidential values with 1.
-By cleaned, the census columns are split up into year, topic and variable columns. 
+By cleaned, I mean that the census columns are split up into year, topic and variable columns. 
 
 ```{r get_data}
 religious_association_nz_region <- 
@@ -84,17 +84,20 @@ religious_association_nz_region <-
                    clean = TRUE, replace_confidential_values = 1)
 ```
 
-The above workflow essentially encapsulates the workflow brought to the user by the `nzcenrs` package which makes it easy to access the data, select the topics wanted, filter by regions and transform in a 'tidy' table.
-The output of this is the following table:
+The above workflow essentially encapsulates the workflow brought to the user by the `nzcensr` package which tries to make it as easy to access the data, select the topics wanted, filter by regions and transform in a 'tidy' table.
+The output of this is the following table (top five rows only):
 
 ```{r echo = FALSE}
 religious_association_nz_region %>% 
-  head(1) %>% 
-  DT::datatable()
+  head(5) %>% 
+  kable()
 ```
 
 Cool, that is all tidy. 
-For comparison sake, let us create a percentage of people as opposed to absolute numbers.
+
+Let's make some plots!
+
+For interests sake, let us create a variable of percentage of people as opposed to absolute numbers.
 To do this, we create two tables of the religions and the totals and then join them back to each other based on the region.
 Then we can simply divide the religion number by the total and create a percentage.
 
@@ -123,7 +126,7 @@ religious_association_nz_region_percent <-
 
 Now to create a line plot to investigate the trends the three time periods.
 
-```{r region_line_plot, fig.width=7, fig.height=7}
+```{r region_line_plot, fig.width=7, fig.height=5}
 ggplot(religious_association_nz_region_percent) +
   geom_line(aes(x = year, y = percentage_people, colour = variable, group = variable)) +
   scale_colour_discrete(name = "Religion") +
@@ -134,10 +137,10 @@ ggplot(religious_association_nz_region_percent) +
   theme(legend.position = "top")
 ```
 
-Interesting, in these plots you can clearly see the 'decline' of Christianity occuring the increasing 'lack of religion'. 
+Interesting, in these plots you can clearly see the 'decline' of Christianity occuring and the increasing 'lack of religion'. 
 Clearly, these two categories dwarf the others, and it would be interesting to drop these out to see more of the minor religions.
 
-```{r minor_religions, fig.width=6, fig.height=6}
+```{r minor_religions, fig.width=6, fig.height=4}
 religious_association_nz_region_percent_minors <- 
   filter(religious_association_nz_region_percent,
          !(variable %in% c("Christian", "No Religion")))
