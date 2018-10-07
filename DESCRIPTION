@@ -1,10 +1,10 @@
 Package: nzcensr
 Type: Package
-Title: New Zealands 2013 census data
+Title: New Zealands census data
 Version: 0.1.0
 Authors@R: person("Phil", "Donovan", role = c("aut", "cre"), email = "philiprogerdonovan@gmail.com")
 Maintainer: The package maintainer <philiprogerdonovan@gmail.com>
-Description: Provides New Zealands 2013 census data in a conveniant form with accessor functions to both spatial and non-spatial forms.
+Description: Provides New Zealands census data in a conveniant form with accessor functions to both spatial and non-spatial forms.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

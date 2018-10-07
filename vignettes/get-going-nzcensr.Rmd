@@ -59,13 +59,13 @@ kable(nz_census_tables())
 This function also accepts the input of a table which returns all of the unique topics in the data set, and whether to include the variables or not.
 
 ```{r}
-kable(nz_census_tables(dwelling_area_units))
+kable(nz_census_tables("dwelling_area_units"))
 ```
 
 or (table shows just the first ten for presentation)
 
 ```{r}
-nz_census_tables(dwelling_area_units, variables = TRUE) %>% 
+nz_census_tables("dwelling_area_units", variables = TRUE) %>% 
   slice(1:10) %>% 
   kable()
 ```
