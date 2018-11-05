@@ -4,7 +4,7 @@ library(nzcensr)
 test_that("clean_census works", {
 
   # Import long data (without GIS for speed)
-  nz_regions_long <- transform_census(dwelling_regions, include_gis = FALSE, long = TRUE)
+  nz_regions_long <- transform_census(dwelling_regions, gis = FALSE, long = TRUE)
 
   # Clean
   nz_regions_long_clean <- clean_census_columns(nz_regions_long)

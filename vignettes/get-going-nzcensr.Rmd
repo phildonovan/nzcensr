@@ -79,9 +79,9 @@ By cleaned, I mean that the census columns are split up into year, topic and var
 ```{r get_data}
 religious_association_nz_region <- 
   select_by_topic(individual_part_2_regions, "religious") %>% 
-  filter_by_area("regions", "regions", "Auckland") %>% 
-  transform_census(include_gis = FALSE, long = TRUE, 
-                   clean = TRUE, replace_confidential_values = 1)
+  filter_by_census_area("regions", "regions", "Auckland") %>% 
+  transform_census(gis = FALSE, long = TRUE, 
+                   clean = TRUE)
 ```
 
 The above workflow essentially encapsulates the workflow brought to the user by the `nzcensr` package which tries to make it as easy to access the data, select the topics wanted, filter by regions and transform in a 'tidy' table.

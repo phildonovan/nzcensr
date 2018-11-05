@@ -5,17 +5,18 @@
 #   Test Package:              'Cmd + Shift + T'
 
 nz_census_tables <- function(table_name = "", variables = FALSE){
-  #' Get a table of census data available
+  #' Returns a table of census data available
   #'
-  #' @description A function which shows what data sets are available and what they're called. For an
-  #' indepth query of a data set specify the table.
+  #' @description Shows what data sets are available and what they're called. For an
+  #' in-depth query of a data set specify the table and variable.
   #'
   #' @param table_name The name of the table that for a description. Must be a string e.g. "dwelling_area_units". 
-  #' @param variables Whether to show variables of a table or not. Table must be specified.
+  #' @param variables Whether to show variables of a table or not. Table must be specified when checking out a specific variable.
   #'
-  #' @return A table describing the data sets or data set.
+  #' @return A table describing the data set(s).
   #'
   #' @importFrom tibble tribble
+  #' @importFrom stringr str_detect str_replace_all
   #' @export
   
   table_description <-
@@ -102,7 +103,7 @@ nz_census_tables <- function(table_name = "", variables = FALSE){
   
 }
 
-transform_census <- function(.data, replace_confidential_values = NULL, include_gis = TRUE,
+transform_census <- function(.data, gis = TRUE,
                              crs = 2193, long = FALSE, clean = FALSE){
   #' Transform nz census data
   #'
@@ -110,12 +111,10 @@ transform_census <- function(.data, replace_confidential_values = NULL, include_
   #' such as whether to include the GIS data, what its CRS system should be (defaults to 2193 -- NZTM) and whether it
   #' should come in the wide (default) or long format.
   #'
-  #' @param .data The data set to be passed. See what_.datas.
-  #' @param include_gis If the data set should include the gis column (defaults to TRUE).
+  #' @param .data The data set to be passed.
+  #' @param gis If the data set should include the gis column (defaults to TRUE).
   #' @param crs The desired Coordinate Reference System of the data set (defaults to 2193). Only
   #' important if the data includes a geometry column.
-  #' @param replace_confidential_values Replacement of confidential values ("..C") with another
-  #' value e.g. NA or 0 or anything for that matter!
   #' @param long Whether the data should be returned in the long format or not.
   #' @param clean True/False on whether to separate the original census column headers into year, 'topics' and 'variables'.
   #'
@@ -123,16 +122,11 @@ transform_census <- function(.data, replace_confidential_values = NULL, include_
   #'
   #' @export
   
-  # Replace confidential data
-  if (!is.null(replace_confidential_values)) {
-    .data <- replace_confidential(.data, replace_confidential_values)
-  }
-  
   # Drop geometry column
-  if (include_gis == FALSE) sf::st_geometry(.data) <- NULL
+  if (gis == FALSE) sf::st_geometry(.data) <- NULL
   
   # Perform CRS transformation
-  if (include_gis == TRUE & crs != 2193) .data <- sf::st_transform(.data, crs)
+  if (gis == TRUE & crs != 2193) .data <- sf::st_transform(.data, crs)
   
   # Convert to long
   if (long == TRUE) .data <- table_to_long(.data)
