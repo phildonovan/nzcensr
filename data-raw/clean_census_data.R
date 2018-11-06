@@ -26,7 +26,12 @@ clean_census_csv <- function(census_file, write_to_file = FALSE){
 
   message(str_interp("Cleaning the census data for the ${str_to_lower(census_folder_name)} data set."))
 
-  census_file <- read_csv(census_file, col_types = cols())
+  stats_locale <-
+    locale(date_names = "en", date_format = "%AD", time_format = "%AT",
+           decimal_mark = ".", grouping_mark = ",", tz = "UTC",
+           encoding = "WINDOWS-1252", asciify = FALSE)
+  
+  census_file <- read_csv(census_file, col_types = cols(), locale = stats_locale)
 
 
   # Geographic units and extraction patterns
