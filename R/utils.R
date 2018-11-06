@@ -25,9 +25,8 @@ clean_census_columns <- function(.data){
   #' @param .data The data frame to be cleaned. Must be a long dataframe returned by read_nz_census_data()
   #' @examples
   #' nz_dwelling_regions_long <- transform_census(dwelling_regions,
-  #'   include_gis = FALSE,
-  #'   long = TRUE,
-  #'   replace_confidential_values = NA_integer_)
+  #'   gis = FALSE,
+  #'   long = TRUE)
   #' cleaned_data <- clean_census_columns(nz_dwelling_regions_long)
   #' head(cleaned_data)
   #' @importFrom magrittr "%>%"
@@ -183,9 +182,9 @@ extract_variables <- function(raw_variables){
 select_by_topic <- function(.data, topics, exclude = FALSE){
   #' Filter the census topics in a census dataframe
   #'
-  #' This is a helper function for quickly and easily selecting or excluding topics in a NZ census data set.
+  #' This is a helper function for quickly and easily selecting or excluding topics on a wide nzcensr data set.
   #'
-  #' Just a wrapper around a str_detect("pattern_1|pattern_2") selection.
+  #' Really just a wrapper around a str_detect("pattern_1|pattern_2") selection.
   #'
   #' @param .data The data frame from which the topics should be selected/excluded from.
   #' @param topics A vector of census topics to be selected or excluded e.g.
@@ -193,16 +192,22 @@ select_by_topic <- function(.data, topics, exclude = FALSE){
   #' @param exclude Whether the topics should be selected or excluded.
   #'
   #' @return A dataframe
+  #' 
+  #' @examples
+  #' select_by_topic(dwelling_area_units, c("fuel_types", "private_dwelling"))
+  #' 
+  #' @importFrom stringr str_replace_all str_detect 
+  #' 
   #' @export
 
   # Protect regular expression characters
-  topics_protected <- str_replace_all(topics, " ", "_") %>%
-    str_replace_all("(\\W)", "\\\\\\1")
+  topics_protected <- stringr::str_replace_all(topics, " ", "_") %>%
+    stringr::str_replace_all("(\\W)", "\\\\\\1")
   topics_regex <- paste(topics_protected, collapse = "|")
 
   # Detect the columns that match the vectors given.
   all_columns <- colnames(.data)
-  topic_column_match <- str_detect(all_columns, topics_regex)
+  topic_column_match <- stringr::str_detect(all_columns, topics_regex)
 
   # Flip the logical if the excluding.
   if (exclude == TRUE) topic_column_match <- !topic_column_match
@@ -220,13 +225,13 @@ select_by_topic <- function(.data, topics, exclude = FALSE){
 }
 
 
-filter_by_area <- function(.data, geographic_level, geographic_filter, pattern){
+filter_by_census_area <- function(.data, geographic_level, geographic_filter, pattern, append_geog_desc = TRUE){
 
   #' Filters census data by area
   #'
   #' Filters a census table by another area e.g. meshblocks by territorial area or region.
-  #' It can only work if the geographic level is at a greater scale than the input data e.g.
-  #' meshblocks < area_units < wards < local boards < territoral authorities < regions
+  #' It can only work if the geographic level is at the same or a greater scale than the input data e.g.
+  #' meshblocks <= area_units <= wards <= local boards <= territoral authorities <= regions
   #'
   #' @param .data The data set to be filtered. Must contain a column with census spatial
   #' names in it e.g. (Area_Code_and_Description).
@@ -235,6 +240,8 @@ filter_by_area <- function(.data, geographic_level, geographic_filter, pattern){
   #' @param pattern The pattern to match the area to filter by e.g. 'Wellington Region'.
   #'
   #' @return A sf dataframe.
+  #' 
+  #' @examples
   #'
   #' @importFrom stringr str_detect str_interp
   #' @importFrom dplyr filter select
@@ -284,14 +291,35 @@ filter_by_area <- function(.data, geographic_level, geographic_filter, pattern){
     tidyr::unite(upper_geo, one_of(name_concordance[[geographic_filter]]), sep = " ", remove = FALSE) %>%
     mutate(upper_geo = stringr::str_to_lower(upper_geo)) %>%
     dplyr::filter(stringr::str_detect(upper_geo, stringr::str_to_lower(pattern))) %>%
-    dplyr::pull(lower_geo) %>%
-    unique
+    dplyr::distinct() 
+  
+  # return(.data)
+  # return(list(.data, wanted_areas))
 
   # If the lower level is meshblocks, then paste the "MB " onto the
   # front so that it matches the Area_Code_and_Description meshblock id.
   if (.data_geography == "meshblocks") wanted_areas <- paste0("MB ", wanted_areas)
 
-  # Filter data
-  dplyr::filter(.data, Area_Code_and_Description %in% wanted_areas)
+  if (append_geog_desc == TRUE){
+    
+    # Filter data and join geog description
+    geog_desc <- select(wanted_areas,
+                        one_of(name_concordance[[.data_geography]]), 
+                        one_of(name_concordance[[geographic_filter]]))
+    
+    # Get the join parameters
+    code_join <- name_concordance[[.data_geography]][1]
+    description_join <- name_concordance[[.data_geography]][2]
+      
+    dplyr::filter(.data, Area_Code_and_Description %in% wanted_areas$lower_geo) %>% 
+      dplyr::left_join(geog_desc, by = c("Code" = code_join, "Description" = description_join))
+    
+  } else {
+    
+    # Filter data
+    dplyr::filter(.data, Area_Code_and_Description %in% wanted_areas$lower_geo)
+  }
+  
+  
 }
 

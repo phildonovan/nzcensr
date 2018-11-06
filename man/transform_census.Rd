@@ -4,16 +4,13 @@
 \alias{transform_census}
 \title{Transform nz census data}
 \usage{
-transform_census(.data, replace_confidential_values = NULL,
-  include_gis = TRUE, crs = 2193, long = FALSE, clean = FALSE)
+transform_census(.data, gis = TRUE, crs = 2193, long = FALSE,
+  clean = FALSE)
 }
 \arguments{
-\item{.data}{The data set to be passed. See what_.datas.}
+\item{.data}{The data set to be passed.}
 
-\item{replace_confidential_values}{Replacement of confidential values ("..C") with another
-value e.g. NA or 0 or anything for that matter!}
-
-\item{include_gis}{If the data set should include the gis column (defaults to TRUE).}
+\item{gis}{If the data set should include the gis column (defaults to TRUE).}
 
 \item{crs}{The desired Coordinate Reference System of the data set (defaults to 2193). Only
 important if the data includes a geometry column.}

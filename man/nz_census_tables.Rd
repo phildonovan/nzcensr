@@ -2,19 +2,19 @@
 % Please edit documentation in R/nz_census_data_functions.R
 \name{nz_census_tables}
 \alias{nz_census_tables}
-\title{Get a table of census data available}
+\title{Returns a table of census data available}
 \usage{
-nz_census_tables(table_name = data.frame(), variables = FALSE)
+nz_census_tables(table_name = "", variables = FALSE)
 }
 \arguments{
-\item{table_name}{The name of the table that for a description. Defaults to false for all tables.}
+\item{table_name}{The name of the table that for a description. Must be a string e.g. "dwelling_area_units".}
 
-\item{variables}{Whether to show variables of a table or not. Table must be specified.}
+\item{variables}{Whether to show variables of a table or not. Table must be specified when checking out a specific variable.}
 }
 \value{
-A table describing the data sets or data set.
+A table describing the data set(s).
 }
 \description{
-A function which shows what data sets are available and what they're called. For an
-indepth query of a data set specify the table.
+Shows what data sets are available and what they're called. For an
+in-depth query of a data set specify the table and variable.
 }

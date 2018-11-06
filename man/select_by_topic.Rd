@@ -18,8 +18,12 @@ select_by_topic(.data, topics, exclude = FALSE)
 A dataframe
 }
 \description{
-This is a helper function for quickly and easily selecting or excluding topics in a NZ census data set.
+This is a helper function for quickly and easily selecting or excluding topics on a wide nzcensr data set.
 }
 \details{
-Just a wrapper around a str_detect("pattern_1|pattern_2") selection.
+Really just a wrapper around a str_detect("pattern_1|pattern_2") selection.
+}
+\examples{
+select_by_topic(dwelling_area_units, c("fuel_types", "private_dwelling"))
+
 }
