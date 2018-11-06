@@ -25,9 +25,8 @@ clean_census_columns <- function(.data){
   #' @param .data The data frame to be cleaned. Must be a long dataframe returned by read_nz_census_data()
   #' @examples
   #' nz_dwelling_regions_long <- transform_census(dwelling_regions,
-  #'   include_gis = FALSE,
-  #'   long = TRUE,
-  #'   replace_confidential_values = NA_integer_)
+  #'   gis = FALSE,
+  #'   long = TRUE)
   #' cleaned_data <- clean_census_columns(nz_dwelling_regions_long)
   #' head(cleaned_data)
   #' @importFrom magrittr "%>%"
