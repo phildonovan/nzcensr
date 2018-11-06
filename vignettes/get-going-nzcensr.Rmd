@@ -59,13 +59,13 @@ kable(nz_census_tables())
 This function also accepts the input of a table which returns all of the unique topics in the data set, and whether to include the variables or not.
 
 ```{r}
-kable(nz_census_tables(dwelling_area_units))
+kable(nz_census_tables("dwelling_area_units"))
 ```
 
 or (table shows just the first ten for presentation)
 
 ```{r}
-nz_census_tables(dwelling_area_units, variables = TRUE) %>% 
+nz_census_tables("dwelling_area_units", variables = TRUE) %>% 
   slice(1:10) %>% 
   kable()
 ```
@@ -79,9 +79,9 @@ By cleaned, I mean that the census columns are split up into year, topic and var
 ```{r get_data}
 religious_association_nz_region <- 
   select_by_topic(individual_part_2_regions, "religious") %>% 
-  filter_by_area("regions", "regions", "Auckland") %>% 
-  transform_census(include_gis = FALSE, long = TRUE, 
-                   clean = TRUE, replace_confidential_values = 1)
+  filter_by_census_area("regions", "regions", "Auckland") %>% 
+  transform_census(gis = FALSE, long = TRUE, 
+                   clean = TRUE)
 ```
 
 The above workflow essentially encapsulates the workflow brought to the user by the `nzcensr` package which tries to make it as easy to access the data, select the topics wanted, filter by regions and transform in a 'tidy' table.

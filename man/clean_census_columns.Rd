@@ -14,9 +14,8 @@ Cleans the variable names and splits them into columns in a long table.
 }
 \examples{
 nz_dwelling_regions_long <- transform_census(dwelling_regions,
-  include_gis = FALSE,
-  long = TRUE,
-  replace_confidential_values = NA_integer_)
+  gis = FALSE,
+  long = TRUE)
 cleaned_data <- clean_census_columns(nz_dwelling_regions_long)
 head(cleaned_data)
 }

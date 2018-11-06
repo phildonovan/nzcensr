@@ -8,9 +8,9 @@ library(purrr)
 library(devtools)
 
 # Get working directory
-census_files <- list.files("data-raw/2013_mb_dataset_Total_New_Zealand_CSV/", full.names = TRUE)
-census_names <- list.files("data-raw/2013_mb_dataset_Total_New_Zealand_CSV/") %>%
-  str_replace("2013-mb-dataset-Total-New-Zealand-", "") %>%
+census_files <- list.files("data-raw/csvs/", full.names = TRUE)
+census_names <- list.files("data-raw/csvs/") %>%
+  # str_replace("2013-mb-dataset-Total-New-Zealand-", "") %>%
   str_replace(".csv", "")
 
 census_files <- setNames(census_files, census_names)
@@ -26,7 +26,12 @@ clean_census_csv <- function(census_file, write_to_file = FALSE){
 
   message(str_interp("Cleaning the census data for the ${str_to_lower(census_folder_name)} data set."))
 
-  census_file <- read_csv(census_file, col_types = cols())
+  stats_locale <-
+    locale(date_names = "en", date_format = "%AD", time_format = "%AT",
+           decimal_mark = ".", grouping_mark = ",", tz = "UTC",
+           encoding = "WINDOWS-1252", asciify = FALSE)
+  
+  census_file <- read_csv(census_file, col_types = cols(), locale = stats_locale)
 
 
   # Geographic units and extraction patterns
@@ -67,13 +72,14 @@ extract_data <- function(extraction_info, census_file, set_confidential_values =
   data <- dplyr::filter(census_file, str_detect(Area_Code_and_Description, pattern))
 
   # convert "..C" to new number
-  data <- tidyr::gather(data, census_column, count, -1, -2, -3) %>%
-    dplyr::mutate(count = dplyr::case_when(
-      stringr::str_detect(count, fixed("*")) == TRUE ~ NA_character_,
-      # str_detect(count, "..C") == TRUE ~ "1",
-      TRUE ~ count)
+  data <- tidyr::gather(data, census_column, value, -1, -2, -3) %>%
+    dplyr::mutate(value = dplyr::case_when(
+      stringr::str_detect(value, fixed("*")) == TRUE ~ NA_character_,
+      str_detect(value, "..C") == TRUE ~ NA_character_,
+      TRUE ~ value),
+      value = as.double(value)
     ) %>%
-    tidyr::spread(census_column, count)
+    tidyr::spread(census_column, value)
 
   # Attach geography
   # Insert join here.
